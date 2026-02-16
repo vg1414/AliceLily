@@ -9,198 +9,106 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body { 
-    width: 100%; min-height: 100vh; min-height: 100dvh;
-    font-family: 'Nunito', sans-serif;
-    overflow-x: hidden;
-    user-select: none; -webkit-user-select: none;
-    touch-action: manipulation;
-  }
-  button { touch-action: manipulation; font-family: inherit; cursor: pointer; }
-  button:active { transform: scale(0.95) !important; }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{width:100%;min-height:100vh;min-height:100dvh;font-family:'Nunito',sans-serif;overflow-x:hidden;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+  button{touch-action:manipulation;font-family:inherit;cursor:pointer}
+  button:active{transform:scale(0.95)!important}
+  .screen{display:none;min-height:100vh;min-height:100dvh}
+  .screen.active{display:flex}
 
-  .screen { display: none; min-height: 100vh; min-height: 100dvh; }
-  .screen.active { display: flex; }
+  .profile-screen{flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a1035 0%,#2d1b69 40%,#44208a 100%);padding:2rem;position:relative;overflow:hidden}
+  .profile-screen .content{position:relative;z-index:1;text-align:center}
+  .profile-screen .big-emoji{font-size:clamp(2.5rem,6vw,4rem);margin-bottom:.5rem;animation:bounceIn .8s ease-out}
+  .profile-screen h1{font-family:'Fredoka',sans-serif;font-size:clamp(2rem,5vw,3.5rem);color:#fff;margin-bottom:.5rem;text-shadow:0 4px 20px rgba(124,92,252,.5);animation:bounceIn .8s .1s ease-out both;font-weight:700}
+  .profile-screen .subtitle{font-size:clamp(1rem,2.5vw,1.4rem);color:rgba(255,255,255,.7);margin-bottom:3rem;animation:bounceIn .8s .2s ease-out both}
+  .profile-buttons{display:flex;gap:clamp(1rem,4vw,2.5rem);justify-content:center;flex-wrap:wrap}
+  .profile-btn{background:rgba(255,255,255,.08);border:3px solid rgba(255,255,255,.15);border-radius:32px;padding:clamp(1.5rem,4vw,2.5rem) clamp(2rem,5vw,3.5rem);transition:all .3s cubic-bezier(.34,1.56,.64,1);backdrop-filter:blur(10px);box-shadow:0 8px 30px rgba(0,0,0,.2);min-width:clamp(160px,30vw,220px);animation:bounceIn .6s ease-out both}
+  .profile-btn:nth-child(1){animation-delay:.3s}
+  .profile-btn:nth-child(2){animation-delay:.45s}
+  .profile-btn .emoji{font-size:clamp(3rem,8vw,5rem);margin-bottom:.5rem}
+  .profile-btn .name{font-family:'Fredoka',sans-serif;font-size:clamp(1.5rem,3.5vw,2rem);color:#fff;font-weight:600}
+  .profile-btn .age{font-size:clamp(.9rem,2vw,1.1rem);color:rgba(255,255,255,.6);margin-top:4px}
+  .made-by{position:absolute;bottom:1rem;right:1.5rem;font-size:.7rem;color:rgba(255,255,255,.2);z-index:1;font-family:'Nunito',sans-serif}
 
-  .profile-screen {
-    flex-direction: column; align-items: center; justify-content: center;
-    background: linear-gradient(135deg, #1a1035 0%, #2d1b69 40%, #44208a 100%);
-    padding: 2rem; position: relative; overflow: hidden;
-  }
-  .profile-screen .content { position: relative; z-index: 1; text-align: center; }
-  .profile-screen .big-emoji { font-size: clamp(2.5rem,6vw,4rem); margin-bottom: 0.5rem; animation: bounceIn .8s ease-out; }
-  .profile-screen h1 {
-    font-family: 'Fredoka', sans-serif; font-size: clamp(2rem,5vw,3.5rem); color: #fff;
-    margin-bottom: 0.5rem; text-shadow: 0 4px 20px rgba(124,92,252,.5);
-    animation: bounceIn .8s .1s ease-out both; font-weight: 700;
-  }
-  .profile-screen .subtitle {
-    font-size: clamp(1rem,2.5vw,1.4rem); color: rgba(255,255,255,.7);
-    margin-bottom: 3rem; animation: bounceIn .8s .2s ease-out both;
-  }
-  .profile-buttons { display: flex; gap: clamp(1rem,4vw,2.5rem); justify-content: center; flex-wrap: wrap; }
-  .profile-btn {
-    background: rgba(255,255,255,.08); border: 3px solid rgba(255,255,255,.15);
-    border-radius: 32px; padding: clamp(1.5rem,4vw,2.5rem) clamp(2rem,5vw,3.5rem);
-    transition: all .3s cubic-bezier(.34,1.56,.64,1); backdrop-filter: blur(10px);
-    box-shadow: 0 8px 30px rgba(0,0,0,.2); min-width: clamp(160px,30vw,220px);
-    animation: bounceIn .6s ease-out both;
-  }
-  .profile-btn:nth-child(1) { animation-delay: .3s; }
-  .profile-btn:nth-child(2) { animation-delay: .45s; }
-  .profile-btn .emoji { font-size: clamp(3rem,8vw,5rem); margin-bottom: .5rem; }
-  .profile-btn .name { font-family: 'Fredoka', sans-serif; font-size: clamp(1.5rem,3.5vw,2rem); color: #fff; font-weight: 600; }
-  .profile-btn .age { font-size: clamp(.9rem,2vw,1.1rem); color: rgba(255,255,255,.6); margin-top: 4px; }
+  .menu-screen{flex-direction:column;align-items:center;padding:2rem;position:relative}
+  .menu-screen .inner{position:relative;z-index:1;max-width:800px;width:100%}
+  .back-btn{background:rgba(0,0,0,.05);border:none;border-radius:16px;padding:.6rem 1.2rem;font-size:1rem;color:#666;margin-bottom:1.5rem}
+  .menu-header{text-align:center;margin-bottom:2.5rem;animation:bounceIn .6s ease-out}
+  .menu-header .emoji{font-size:clamp(2.5rem,6vw,3.5rem)}
+  .menu-header h2{font-family:'Fredoka',sans-serif;font-size:clamp(1.6rem,4vw,2.4rem);color:#2d1b69;font-weight:700}
+  .menu-header p{font-size:clamp(1rem,2.5vw,1.2rem);color:#666}
+  .menu-items{display:flex;flex-direction:column;gap:clamp(.8rem,2vw,1.2rem);align-items:center}
+  .menu-btn{width:100%;max-width:500px;background:rgba(255,255,255,.8);border:2px solid transparent;border-radius:24px;padding:clamp(1.2rem,3vw,1.8rem) clamp(1.5rem,3vw,2rem);display:flex;align-items:center;gap:clamp(.8rem,2vw,1.2rem);text-align:left;box-shadow:0 4px 15px rgba(0,0,0,.06);transition:all .3s cubic-bezier(.34,1.56,.64,1)}
+  .menu-btn .icon-box{font-size:clamp(2rem,5vw,2.8rem);width:clamp(3rem,8vw,4rem);height:clamp(3rem,8vw,4rem);display:flex;align-items:center;justify-content:center;border-radius:16px;flex-shrink:0}
+  .menu-btn .label{font-family:'Fredoka',sans-serif;font-size:clamp(1.1rem,2.8vw,1.4rem);color:#2d1b69;font-weight:600}
+  .menu-btn .desc{font-size:clamp(.85rem,2vw,1rem);color:#888}
 
-  .menu-screen { flex-direction: column; align-items: center; padding: 2rem; position: relative; }
-  .menu-screen .inner { position: relative; z-index: 1; max-width: 800px; width: 100%; }
-  .back-btn {
-    background: rgba(0,0,0,.05); border: none; border-radius: 16px;
-    padding: .6rem 1.2rem; font-size: 1rem; color: #666; margin-bottom: 1.5rem;
-  }
-  .menu-header { text-align: center; margin-bottom: 2.5rem; animation: bounceIn .6s ease-out; }
-  .menu-header .emoji { font-size: clamp(2.5rem,6vw,3.5rem); }
-  .menu-header h2 { font-family: 'Fredoka', sans-serif; font-size: clamp(1.6rem,4vw,2.4rem); color: #2d1b69; font-weight: 700; }
-  .menu-header p { font-size: clamp(1rem,2.5vw,1.2rem); color: #666; }
-  .menu-items { display: flex; flex-direction: column; gap: clamp(.8rem,2vw,1.2rem); align-items: center; }
-  .menu-btn {
-    width: 100%; max-width: 500px; background: rgba(255,255,255,.8);
-    border: 2px solid transparent; border-radius: 24px;
-    padding: clamp(1.2rem,3vw,1.8rem) clamp(1.5rem,3vw,2rem);
-    display: flex; align-items: center; gap: clamp(.8rem,2vw,1.2rem);
-    text-align: left; box-shadow: 0 4px 15px rgba(0,0,0,.06);
-    transition: all .3s cubic-bezier(.34,1.56,.64,1);
-  }
-  .menu-btn .icon-box {
-    font-size: clamp(2rem,5vw,2.8rem); width: clamp(3rem,8vw,4rem); height: clamp(3rem,8vw,4rem);
-    display: flex; align-items: center; justify-content: center; border-radius: 16px; flex-shrink: 0;
-  }
-  .menu-btn .label { font-family: 'Fredoka', sans-serif; font-size: clamp(1.1rem,2.8vw,1.4rem); color: #2d1b69; font-weight: 600; }
-  .menu-btn .desc { font-size: clamp(.85rem,2vw,1rem); color: #888; }
+  .game-screen{flex-direction:column;padding:1.5rem;position:relative}
+  .game-inner{position:relative;z-index:1;max-width:700px;margin:0 auto;width:100%;flex:1;display:flex;flex-direction:column}
+  .game-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+  .score{font-family:'Fredoka',sans-serif;font-size:1.1rem;color:#2d1b69}
+  .streak-badge{color:#fff;border-radius:12px;padding:.2rem .8rem;font-size:.9rem;animation:pulse 1s infinite;display:inline-block;margin-left:.5rem}
+  .card{text-align:center;background:#fff;border-radius:32px;padding:clamp(1.5rem,4vw,2.5rem);box-shadow:0 8px 40px rgba(0,0,0,.06);margin-bottom:1.5rem}
+  .card .hint{font-size:clamp(.9rem,2.2vw,1.1rem);color:#888;margin-bottom:.8rem}
+  .correct-msg{font-family:'Fredoka',sans-serif;font-size:clamp(1.2rem,3vw,1.5rem);color:#6BCB77;margin-top:.8rem;animation:bounceIn .3s ease-out}
 
-  .game-screen { flex-direction: column; padding: 1.5rem; position: relative; }
-  .game-inner {
-    position: relative; z-index: 1; max-width: 700px; margin: 0 auto; width: 100%;
-    flex: 1; display: flex; flex-direction: column;
-  }
-  .game-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-  .score { font-family: 'Fredoka', sans-serif; font-size: 1.1rem; color: #2d1b69; }
-  .streak-badge {
-    color: #fff; border-radius: 12px; padding: .2rem .8rem;
-    font-size: .9rem; animation: pulse 1s infinite; display: inline-block; margin-left: .5rem;
-  }
-  .card {
-    text-align: center; background: #fff; border-radius: 32px;
-    padding: clamp(1.5rem,4vw,2.5rem); box-shadow: 0 8px 40px rgba(0,0,0,.06);
-    margin-bottom: 1.5rem;
-  }
-  .card .hint { font-size: clamp(.9rem,2.2vw,1.1rem); color: #888; margin-bottom: .8rem; }
-  .correct-msg {
-    font-family: 'Fredoka', sans-serif; font-size: clamp(1.2rem,3vw,1.5rem);
-    color: #6BCB77; margin-top: .8rem; animation: bounceIn .3s ease-out;
-  }
+  .big-letter{font-family:'Fredoka',sans-serif;font-size:clamp(5rem,15vw,8rem);font-weight:700;line-height:1}
+  .sound-btn{margin-top:.8rem;background:none;border:3px solid rgba(0,0,0,.12);border-radius:50%;width:72px;height:72px;font-size:2rem;display:inline-flex;align-items:center;justify-content:center;transition:all .2s;position:relative}
+  .sound-btn::after{content:'Tryck för att lyssna';position:absolute;bottom:-1.6rem;left:50%;transform:translateX(-50%);font-size:.7rem;color:#aaa;white-space:nowrap;font-family:'Nunito',sans-serif}
+  .sound-btn:active{background:rgba(0,0,0,.05);transform:scale(1.1)!important}
+  .sound-btn.speaking{border-color:var(--accent,#7C5CFC);animation:pulse .5s infinite}
+  .letter-grid{display:grid;gap:clamp(.6rem,2vw,1rem);max-width:500px;margin:0 auto}
+  .letter-grid.cols-2{grid-template-columns:repeat(2,1fr)}
+  .letter-option{font-family:'Fredoka',sans-serif;font-size:clamp(2rem,6vw,3rem);font-weight:600;background:#fff;color:#2d1b69;border:2px solid rgba(0,0,0,.06);border-radius:20px;padding:clamp(1rem,3vw,1.5rem);box-shadow:0 4px 15px rgba(0,0,0,.06);transition:all .2s}
+  .letter-option.correct{background:linear-gradient(135deg,#6BCB77,#4CAF50);color:#fff}
 
-  .big-letter { font-family: 'Fredoka', sans-serif; font-size: clamp(5rem,15vw,8rem); font-weight: 700; line-height: 1; }
-  .sound-btn {
-    margin-top: 0.8rem; background: none; border: 2px solid rgba(0,0,0,.1);
-    border-radius: 50%; width: 56px; height: 56px; font-size: 1.6rem;
-    display: inline-flex; align-items: center; justify-content: center; transition: all .2s;
-  }
-  .sound-btn:active { background: rgba(0,0,0,.05); }
-  .letter-grid { display: grid; gap: clamp(.6rem,2vw,1rem); max-width: 500px; margin: 0 auto; }
-  .letter-grid.cols-2 { grid-template-columns: repeat(2,1fr); }
-  .letter-option {
-    font-family: 'Fredoka', sans-serif; font-size: clamp(2rem,6vw,3rem); font-weight: 600;
-    background: #fff; color: #2d1b69; border: 2px solid rgba(0,0,0,.06);
-    border-radius: 20px; padding: clamp(1rem,3vw,1.5rem);
-    box-shadow: 0 4px 15px rgba(0,0,0,.06); transition: all .2s;
-  }
-  .letter-option.correct { background: linear-gradient(135deg,#6BCB77,#4CAF50); color: #fff; }
+  .word-image{font-size:clamp(3rem,10vw,5rem);margin-bottom:.5rem}
+  .letter-slots{display:flex;gap:clamp(.3rem,1vw,.6rem);justify-content:center;flex-wrap:wrap}
+  .letter-slot{width:clamp(2.5rem,8vw,3.5rem);height:clamp(3rem,9vw,4rem);border-radius:14px;border:3px solid rgba(0,0,0,.1);background:#fafafa;display:flex;align-items:center;justify-content:center;font-family:'Fredoka',sans-serif;font-size:clamp(1.5rem,5vw,2.2rem);font-weight:600;color:#2d1b69;transition:all .2s}
+  .letter-slot.typed{border-color:#6BCB77;background:#6BCB7715;color:#6BCB77;transform:scale(1.05)}
+  .letter-slot.current{border-color:var(--accent,#7C5CFC);background:var(--accent-light,#7C5CFC22)}
 
-  .word-image { font-size: clamp(3rem,10vw,5rem); margin-bottom: .5rem; }
-  .letter-slots { display: flex; gap: clamp(.3rem,1vw,.6rem); justify-content: center; flex-wrap: wrap; }
-  .letter-slot {
-    width: clamp(2.5rem,8vw,3.5rem); height: clamp(3rem,9vw,4rem);
-    border-radius: 14px; border: 3px solid rgba(0,0,0,.1);
-    background: #fafafa; display: flex; align-items: center; justify-content: center;
-    font-family: 'Fredoka', sans-serif; font-size: clamp(1.5rem,5vw,2.2rem);
-    font-weight: 600; color: #2d1b69; transition: all .2s;
-  }
-  .letter-slot.typed { border-color: #6BCB77; background: #6BCB7715; color: #6BCB77; transform: scale(1.05); }
-  .letter-slot.current { border-color: var(--accent,#7C5CFC); background: var(--accent-light,#7C5CFC22); }
+  .sentence-display{font-family:'Fredoka',sans-serif;font-size:clamp(1.3rem,3.5vw,1.8rem);color:#2d1b69;letter-spacing:.05em;padding:.8rem;border-radius:16px;font-weight:600;margin-bottom:1.2rem}
+  .typed-display{font-family:'Fredoka',sans-serif;font-size:clamp(1.2rem,3vw,1.6rem);min-height:2.5rem;padding:.6rem 1rem;background:#fafafa;border-radius:14px;border:2px solid transparent;color:#2d1b69;transition:all .2s}
+  .typed-display.has-text{border-color:var(--accent-light,#7C5CFC22)}
+  .typed-display.correct-border{border-color:#6BCB77;color:#6BCB77}
+  .cursor{animation:blink 1s infinite}
 
-  .sentence-display {
-    font-family: 'Fredoka', sans-serif; font-size: clamp(1.3rem,3.5vw,1.8rem);
-    color: #2d1b69; letter-spacing: .05em; padding: .8rem;
-    border-radius: 16px; font-weight: 600; margin-bottom: 1.2rem;
-  }
-  .typed-display {
-    font-family: 'Fredoka', sans-serif; font-size: clamp(1.2rem,3vw,1.6rem);
-    min-height: 2.5rem; padding: .6rem 1rem; background: #fafafa;
-    border-radius: 14px; border: 2px solid transparent; color: #2d1b69; transition: all .2s;
-  }
-  .typed-display.has-text { border-color: var(--accent-light,#7C5CFC22); }
-  .typed-display.correct-border { border-color: #6BCB77; color: #6BCB77; }
-  .cursor { animation: blink 1s infinite; }
+  .keyboard{background:rgba(255,255,255,.9);border-radius:24px;padding:clamp(.6rem,1.5vw,1rem);box-shadow:0 -4px 20px rgba(0,0,0,.04);backdrop-filter:blur(10px);margin-top:auto}
+  .kb-row{display:flex;justify-content:center;gap:clamp(.15rem,.6vw,.35rem);margin-bottom:clamp(.25rem,.8vw,.4rem)}
+  .kb-row:last-child{margin-bottom:0}
+  .kb-key{font-family:'Fredoka',sans-serif;font-size:clamp(.95rem,2.6vw,1.25rem);font-weight:600;background:#fff;color:#2d1b69;border:1px solid rgba(0,0,0,.08);border-radius:10px;min-width:clamp(1.9rem,5.8vw,2.7rem);height:clamp(2.4rem,6.8vw,3.2rem);box-shadow:0 2px 4px rgba(0,0,0,.05);padding:0 .2rem}
+  .kb-key.big{min-width:clamp(3rem,9vw,4.5rem);font-family:'Nunito',sans-serif;font-size:clamp(.85rem,2vw,1rem)}
+  .kb-key.backspace{background:#fee;color:#c33;border-color:rgba(200,50,50,.15)}
+  .kb-key.space{min-width:clamp(8rem,30vw,14rem);background:#f0f0f0;color:#666;font-family:'Nunito',sans-serif;font-size:clamp(.85rem,2vw,1rem)}
 
-  .keyboard {
-    background: rgba(255,255,255,.9); border-radius: 24px;
-    padding: clamp(.6rem,1.5vw,1rem); box-shadow: 0 -4px 20px rgba(0,0,0,.04);
-    backdrop-filter: blur(10px); margin-top: auto;
-  }
-  .kb-row { display: flex; justify-content: center; gap: clamp(.15rem,.6vw,.35rem); margin-bottom: clamp(.25rem,.8vw,.4rem); }
-  .kb-row:last-child { margin-bottom: 0; }
-  .kb-key {
-    font-family: 'Fredoka', sans-serif; font-size: clamp(.95rem,2.6vw,1.25rem); font-weight: 600;
-    background: #fff; color: #2d1b69; border: 1px solid rgba(0,0,0,.08);
-    border-radius: 10px; min-width: clamp(1.9rem,5.8vw,2.7rem);
-    height: clamp(2.4rem,6.8vw,3.2rem); box-shadow: 0 2px 4px rgba(0,0,0,.05); padding: 0 .2rem;
-  }
-  .kb-key.big { min-width: clamp(3rem,9vw,4.5rem); font-family: 'Nunito', sans-serif; font-size: clamp(.85rem,2vw,1rem); }
-  .kb-key.backspace { background: #fee; color: #c33; border-color: rgba(200,50,50,.15); }
-  .kb-key.space { min-width: clamp(8rem,30vw,14rem); background: #f0f0f0; color: #666; font-family: 'Nunito', sans-serif; font-size: clamp(.85rem,2vw,1rem); }
+  .simple-kb{display:flex;flex-wrap:wrap;gap:clamp(.4rem,1.5vw,.6rem);justify-content:center}
+  .simple-key{font-family:'Fredoka',sans-serif;font-size:clamp(1.4rem,4vw,1.8rem);font-weight:600;background:#fff;color:#2d1b69;border:2px solid rgba(0,0,0,.08);border-radius:14px;width:clamp(3rem,10vw,4rem);height:clamp(3rem,10vw,4rem);box-shadow:0 3px 8px rgba(0,0,0,.06)}
+  .simple-key.backspace{background:#fee;color:#c33;border-color:rgba(200,50,50,.15);font-size:clamp(1rem,2.5vw,1.2rem);width:auto;padding:0 1rem}
 
-  .simple-kb { display: flex; flex-wrap: wrap; gap: clamp(.4rem,1.5vw,.6rem); justify-content: center; }
-  .simple-key {
-    font-family: 'Fredoka', sans-serif; font-size: clamp(1.4rem,4vw,1.8rem); font-weight: 600;
-    background: #fff; color: #2d1b69; border: 2px solid rgba(0,0,0,.08);
-    border-radius: 14px; width: clamp(3rem,10vw,4rem); height: clamp(3rem,10vw,4rem);
-    box-shadow: 0 3px 8px rgba(0,0,0,.06);
-  }
-  .simple-key.backspace { background: #fee; color: #c33; border-color: rgba(200,50,50,.15); font-size: clamp(1rem,2.5vw,1.2rem); width: auto; padding: 0 1rem; }
+  .math-problem{font-family:'Fredoka',sans-serif;font-size:clamp(3rem,10vw,5rem);color:#2d1b69;font-weight:700;line-height:1.2}
+  .math-problem .operator{color:var(--accent,#7C5CFC)}
+  .math-problem .equals{color:#888}
+  .math-problem .answer-box{display:inline-block;min-width:clamp(2.5rem,8vw,3.5rem);border-bottom:4px solid var(--accent,#7C5CFC);margin-left:.3rem}
+  .math-options{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(.6rem,2vw,1rem);max-width:400px;margin:0 auto}
+  .math-option{font-family:'Fredoka',sans-serif;font-size:clamp(2rem,6vw,3rem);font-weight:600;background:#fff;color:#2d1b69;border:2px solid rgba(0,0,0,.06);border-radius:20px;padding:clamp(1rem,3vw,1.5rem);box-shadow:0 4px 15px rgba(0,0,0,.06);transition:all .2s}
+  .math-option.correct{background:linear-gradient(135deg,#6BCB77,#4CAF50);color:#fff}
+  .math-option.wrong-pick{background:#fee;border-color:#fcc}
 
-  .math-problem {
-    font-family: 'Fredoka', sans-serif; font-size: clamp(3rem,10vw,5rem);
-    color: #2d1b69; font-weight: 700; line-height: 1.2;
-  }
-  .math-problem .operator { color: var(--accent,#7C5CFC); }
-  .math-problem .equals { color: #888; }
-  .math-problem .answer-box { display: inline-block; min-width: clamp(2.5rem,8vw,3.5rem); border-bottom: 4px solid var(--accent,#7C5CFC); margin-left: .3rem; }
-  .math-options { display: grid; grid-template-columns: repeat(2,1fr); gap: clamp(.6rem,2vw,1rem); max-width: 400px; margin: 0 auto; }
-  .math-option {
-    font-family: 'Fredoka', sans-serif; font-size: clamp(2rem,6vw,3rem); font-weight: 600;
-    background: #fff; color: #2d1b69; border: 2px solid rgba(0,0,0,.06);
-    border-radius: 20px; padding: clamp(1rem,3vw,1.5rem);
-    box-shadow: 0 4px 15px rgba(0,0,0,.06); transition: all .2s;
-  }
-  .math-option.correct { background: linear-gradient(135deg,#6BCB77,#4CAF50); color: #fff; }
-  .math-option.wrong-pick { background: #fee; border-color: #fcc; }
-  .math-visual {
-    display: flex; justify-content: center; align-items: center; gap: .5rem;
-    margin: 1rem 0; flex-wrap: wrap; font-size: clamp(1.5rem,4vw,2rem);
-  }
-  .math-visual .group { display: flex; gap: .15rem; flex-wrap: wrap; justify-content: center; }
+  .math-visual{display:flex;justify-content:center;align-items:center;gap:.6rem;margin:1rem 0;flex-wrap:wrap;font-size:clamp(1.3rem,3.5vw,1.8rem);line-height:1.4}
+  .math-visual .group{display:inline-flex;gap:.1rem;flex-wrap:wrap;justify-content:center;background:rgba(0,0,0,.03);border-radius:12px;padding:.3rem .5rem}
+  .math-visual .op-symbol{font-weight:700;font-size:clamp(1.5rem,4vw,2rem);color:var(--accent,#7C5CFC)}
+  .math-visual .multiply-label{font-family:'Fredoka',sans-serif;font-size:clamp(.85rem,2vw,1rem);color:#888;text-align:center;width:100%;margin-top:.3rem}
 
-  .particle { position: absolute; border-radius: 50%; pointer-events: none; }
-  .confetti-piece { position: absolute; pointer-events: none; }
+  .particle{position:absolute;border-radius:50%;pointer-events:none}
+  .confetti-piece{position:absolute;pointer-events:none}
 
-  @keyframes bounceIn { 0%{opacity:0;transform:scale(.8) translateY(20px)} 60%{transform:scale(1.05) translateY(-3px)} 100%{opacity:1;transform:scale(1) translateY(0)} }
-  @keyframes slideUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
-  @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
-  @keyframes blink { 0%,50%{opacity:1} 51%,100%{opacity:0} }
-  @keyframes confettiFall { 0%{transform:translateY(0) rotate(0deg);opacity:1} 100%{transform:translateY(100vh) rotate(720deg);opacity:0} }
-  @keyframes floatP { 0%,100%{transform:translate(0,0) scale(1)} 25%{transform:translate(30px,-30px) scale(1.1)} 50%{transform:translate(-20px,-60px) scale(.9)} 75%{transform:translate(20px,-30px) scale(1.05)} }
+  @keyframes bounceIn{0%{opacity:0;transform:scale(.8) translateY(20px)}60%{transform:scale(1.05) translateY(-3px)}100%{opacity:1;transform:scale(1) translateY(0)}}
+  @keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+  @keyframes blink{0%,50%{opacity:1}51%,100%{opacity:0}}
+  @keyframes confettiFall{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+  @keyframes floatP{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(30px,-30px) scale(1.1)}50%{transform:translate(-20px,-60px) scale(.9)}75%{transform:translate(20px,-30px) scale(1.05)}}
 </style>
 </head>
 <body>
@@ -212,25 +120,18 @@
     <h1>Läs &amp; Skriv</h1>
     <p class="subtitle">Vem vill lära sig idag?</p>
     <div class="profile-buttons">
-      <button class="profile-btn" onclick="selectProfile('lily')">
-        <div class="emoji">🌸</div><div class="name">Lily</div><div class="age">4 år</div>
-      </button>
-      <button class="profile-btn" onclick="selectProfile('alice')">
-        <div class="emoji">✨</div><div class="name">Alice</div><div class="age">6 år</div>
-      </button>
+      <button class="profile-btn" onclick="selectProfile('lily')"><div class="emoji">🌸</div><div class="name">Lily</div><div class="age">4 år</div></button>
+      <button class="profile-btn" onclick="selectProfile('alice')"><div class="emoji">✨</div><div class="name">Alice</div><div class="age">6 år</div></button>
     </div>
   </div>
+  <div class="made-by">Made by David Hefner</div>
 </div>
 
 <div id="screen-menu" class="screen menu-screen">
   <div id="particles-menu" style="position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0"></div>
   <div class="inner">
     <button class="back-btn" onclick="showScreen('profiles')">← Byt person</button>
-    <div class="menu-header">
-      <div class="emoji" id="menu-emoji"></div>
-      <h2 id="menu-greeting"></h2>
-      <p>Vad vill du göra idag?</p>
-    </div>
+    <div class="menu-header"><div class="emoji" id="menu-emoji"></div><h2 id="menu-greeting"></h2><p>Vad vill du göra idag?</p></div>
     <div class="menu-items" id="menu-items"></div>
   </div>
 </div>
@@ -239,14 +140,11 @@
   <div id="particles-letters" style="position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0"></div>
   <div id="confetti-letters" style="position:fixed;inset:0;pointer-events:none;z-index:1000"></div>
   <div class="game-inner">
-    <div class="game-top">
-      <button class="back-btn" onclick="showScreen('menu')">← Meny</button>
-      <div class="score">⭐ <span id="letter-score">0</span> <span id="letter-streak" class="streak-badge" style="display:none"></span></div>
-    </div>
+    <div class="game-top"><button class="back-btn" onclick="showScreen('menu')">← Meny</button><div class="score">⭐ <span id="letter-score">0</span> <span id="letter-streak" class="streak-badge" style="display:none"></span></div></div>
     <div class="card">
       <p class="hint">Hitta bokstaven:</p>
       <div class="big-letter" id="target-letter"></div>
-      <div><button class="sound-btn" id="letter-sound-btn" onclick="speakLetter()" title="Lyssna på bokstaven">🔊</button></div>
+      <div><button class="sound-btn" id="letter-sound-btn" onclick="speakCurrentLetter()">🔊</button></div>
       <div id="letter-feedback" class="correct-msg" style="display:none"></div>
     </div>
     <div class="letter-grid cols-2" id="letter-options"></div>
@@ -257,16 +155,8 @@
   <div id="particles-words" style="position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0"></div>
   <div id="confetti-words" style="position:fixed;inset:0;pointer-events:none;z-index:1000"></div>
   <div class="game-inner">
-    <div class="game-top">
-      <button class="back-btn" onclick="showScreen('menu')">← Meny</button>
-      <div class="score">⭐ <span id="word-score">0</span></div>
-    </div>
-    <div class="card">
-      <div class="word-image" id="word-image"></div>
-      <p class="hint">Skriv ordet:</p>
-      <div class="letter-slots" id="word-slots"></div>
-      <div id="word-feedback" class="correct-msg" style="display:none"></div>
-    </div>
+    <div class="game-top"><button class="back-btn" onclick="showScreen('menu')">← Meny</button><div class="score">⭐ <span id="word-score">0</span></div></div>
+    <div class="card"><div class="word-image" id="word-image"></div><p class="hint">Skriv ordet:</p><div class="letter-slots" id="word-slots"></div><div id="word-feedback" class="correct-msg" style="display:none"></div></div>
     <div class="keyboard" id="word-keyboard"></div>
   </div>
 </div>
@@ -275,17 +165,8 @@
   <div id="particles-read" style="position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0"></div>
   <div id="confetti-read" style="position:fixed;inset:0;pointer-events:none;z-index:1000"></div>
   <div class="game-inner">
-    <div class="game-top">
-      <button class="back-btn" onclick="showScreen('menu')">← Meny</button>
-      <div class="score">⭐ <span id="read-score">0</span></div>
-    </div>
-    <div class="card">
-      <div class="word-image" id="read-emoji"></div>
-      <p class="hint" id="read-hint-text">Skriv av meningen:</p>
-      <div class="sentence-display" id="read-target"></div>
-      <div class="typed-display" id="read-typed"><span style="color:#ccc">...</span></div>
-      <div id="read-feedback" class="correct-msg" style="display:none"></div>
-    </div>
+    <div class="game-top"><button class="back-btn" onclick="showScreen('menu')">← Meny</button><div class="score">⭐ <span id="read-score">0</span></div></div>
+    <div class="card"><div class="word-image" id="read-emoji"></div><p class="hint" id="read-hint-text">Skriv av meningen:</p><div class="sentence-display" id="read-target"></div><div class="typed-display" id="read-typed"><span style="color:#ccc">...</span></div><div id="read-feedback" class="correct-msg" style="display:none"></div></div>
     <div class="keyboard" id="read-keyboard"></div>
   </div>
 </div>
@@ -294,101 +175,64 @@
   <div id="particles-math" style="position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0"></div>
   <div id="confetti-math" style="position:fixed;inset:0;pointer-events:none;z-index:1000"></div>
   <div class="game-inner">
-    <div class="game-top">
-      <button class="back-btn" onclick="showScreen('menu')">← Meny</button>
-      <div class="score">⭐ <span id="math-score">0</span> <span id="math-streak" class="streak-badge" style="display:none"></span></div>
-    </div>
-    <div class="card">
-      <p class="hint" id="math-hint"></p>
-      <div class="math-problem" id="math-problem"></div>
-      <div class="math-visual" id="math-visual"></div>
-      <div id="math-feedback" class="correct-msg" style="display:none"></div>
-    </div>
+    <div class="game-top"><button class="back-btn" onclick="showScreen('menu')">← Meny</button><div class="score">⭐ <span id="math-score">0</span> <span id="math-streak" class="streak-badge" style="display:none"></span></div></div>
+    <div class="card"><p class="hint" id="math-hint"></p><div class="math-problem" id="math-problem"></div><div class="math-visual" id="math-visual"></div><div id="math-feedback" class="correct-msg" style="display:none"></div></div>
     <div class="math-options" id="math-options"></div>
   </div>
 </div>
 
 <script>
-const PROFILES = {
-  lily:  { name:"Lily",  age:4, emoji:"🌸", color:"#FF6B9D" },
-  alice: { name:"Alice", age:6, emoji:"✨", color:"#7C5CFC" },
+const PROFILES={lily:{name:"Lily",age:4,emoji:"🌸",color:"#FF6B9D"},alice:{name:"Alice",age:6,emoji:"✨",color:"#7C5CFC"}};
+const CONTENT={
+  4:{
+    letters:"ABCDEFGHIJKLMNOPRSTUVÅÄÖ".split(""),
+    words:[{word:"SOL",hint:"☀️"},{word:"KO",hint:"🐄"},{word:"BIL",hint:"🚗"},{word:"HUS",hint:"🏠"},{word:"KATT",hint:"🐱"},{word:"HUND",hint:"🐶"},{word:"BOLL",hint:"⚽"},{word:"MUS",hint:"🐭"},{word:"ÖGA",hint:"👁️"},{word:"ÄGG",hint:"🥚"},{word:"BÅT",hint:"⛵"},{word:"IS",hint:"🍦"},{word:"FÅR",hint:"🐑"},{word:"MAT",hint:"🍽️"},{word:"NOS",hint:"👃"}],
+    sentences:[{text:"JAG ÄR GLAD",emoji:"😊"},{text:"EN RÖD BIL",emoji:"🚗"},{text:"SE EN KO",emoji:"🐄"},{text:"EN FIN SOL",emoji:"☀️"},{text:"MIN KATT",emoji:"🐱"}],
+  },
+  6:{
+    letters:"ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ".split(""),
+    words:[{word:"BLOMMA",hint:"🌺"},{word:"FJÄRIL",hint:"🦋"},{word:"KANIN",hint:"🐰"},{word:"STJÄRNA",hint:"⭐"},{word:"REGNBÅGE",hint:"🌈"},{word:"DOCKA",hint:"🪆"},{word:"ÄLSKA",hint:"❤️"},{word:"SKOLA",hint:"🏫"},{word:"MÅNE",hint:"🌙"},{word:"GRODA",hint:"🐸"},{word:"SNÖGUBBE",hint:"⛄"},{word:"DELFIN",hint:"🐬"},{word:"FLYGPLAN",hint:"✈️"},{word:"JORDGUBBE",hint:"🍓"},{word:"DINOSAURIE",hint:"🦕"},{word:"PRINSESSA",hint:"👸"},{word:"ENHÖRNING",hint:"🦄"},{word:"CHOKLAD",hint:"🍫"}],
+    sentences:[{text:"KATTEN SOVER PÅ SOFFAN",emoji:"🐱"},{text:"FJÄRILEN FLYGER ÖVER ÄNGEN",emoji:"🦋"},{text:"VI ÅKTE TILL STRANDEN IGÅR",emoji:"🏖️"},{text:"MIN KOMPIS HAR EN HAMSTER",emoji:"🐹"},{text:"REGNBÅGEN LYSER PÅ HIMLEN",emoji:"🌈"},{text:"JAG VILL LÄSA EN BOK OM DRAKAR",emoji:"🐉"},{text:"PRINSESSAN BOR I ETT SLOTT",emoji:"🏰"},{text:"SNÖFLINGORNA FALLER SAKTA NER",emoji:"❄️"},{text:"VI BAKADE KANELBULLAR TILLSAMMANS",emoji:"🍪"},{text:"ENHÖRNINGEN SPRINGER GENOM SKOGEN",emoji:"🦄"}],
+  }
 };
 
-const CONTENT = {
-  4: {
-    letters: "ABCDEFGHIJKLMNOPRSTUVÅÄÖ".split(""),
-    words: [
-      {word:"SOL",hint:"☀️"},{word:"KO",hint:"🐄"},{word:"BIL",hint:"🚗"},
-      {word:"HUS",hint:"🏠"},{word:"KATT",hint:"🐱"},{word:"HUND",hint:"🐶"},
-      {word:"BOLL",hint:"⚽"},{word:"MUS",hint:"🐭"},{word:"ÖGA",hint:"👁️"},
-      {word:"ÄGG",hint:"🥚"},{word:"BÅT",hint:"⛵"},{word:"IS",hint:"🍦"},
-      {word:"FÅR",hint:"🐑"},{word:"MAT",hint:"🍽️"},{word:"NOS",hint:"👃"},
-    ],
-    sentences: [
-      {text:"JAG ÄR GLAD",emoji:"😊"},{text:"EN RÖD BIL",emoji:"🚗"},
-      {text:"SE EN KO",emoji:"🐄"},{text:"EN FIN SOL",emoji:"☀️"},{text:"MIN KATT",emoji:"🐱"},
-    ],
-  },
-  6: {
-    letters: "ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ".split(""),
-    words: [
-      {word:"BLOMMA",hint:"🌺"},{word:"FJÄRIL",hint:"🦋"},{word:"KANIN",hint:"🐰"},
-      {word:"STJÄRNA",hint:"⭐"},{word:"REGNBÅGE",hint:"🌈"},{word:"DOCKA",hint:"🪆"},
-      {word:"ÄLSKA",hint:"❤️"},{word:"SKOLA",hint:"🏫"},{word:"MÅNE",hint:"🌙"},
-      {word:"GRODA",hint:"🐸"},{word:"SNÖGUBBE",hint:"⛄"},{word:"DELFIN",hint:"🐬"},
-      {word:"FLYGPLAN",hint:"✈️"},{word:"JORDGUBBE",hint:"🍓"},{word:"DINOSAURIE",hint:"🦕"},
-      {word:"PRINSESSA",hint:"👸"},{word:"ENHÖRNING",hint:"🦄"},{word:"CHOKLAD",hint:"🍫"},
-    ],
-    sentences: [
-      {text:"KATTEN SOVER PÅ SOFFAN",emoji:"🐱"},
-      {text:"FJÄRILEN FLYGER ÖVER ÄNGEN",emoji:"🦋"},
-      {text:"VI ÅKTE TILL STRANDEN IGÅR",emoji:"🏖️"},
-      {text:"MIN KOMPIS HAR EN HAMSTER",emoji:"🐹"},
-      {text:"REGNBÅGEN LYSER PÅ HIMLEN",emoji:"🌈"},
-      {text:"JAG VILL LÄSA EN BOK OM DRAKAR",emoji:"🐉"},
-      {text:"PRINSESSAN BOR I ETT SLOTT",emoji:"🏰"},
-      {text:"SNÖFLINGORNA FALLER SAKTA NER",emoji:"❄️"},
-      {text:"VI BAKADE KANELBULLAR TILLSAMMANS",emoji:"🍪"},
-      {text:"ENHÖRNINGEN SPRINGER GENOM SKOGEN",emoji:"🦄"},
-    ],
-  },
-};
+// Emojis for math visuals - varies to keep it fun
+const MATH_EMOJIS=['🍎','🌟','🍪','🐱','🌸','💎','🍓','🐶','🦋','🎈'];
 
-let currentProfile = null, audioCtx = null;
+let currentProfile=null,audioCtx=null;
 let letterScore=0,letterStreak=0,targetLetter="",letterLocked=false;
 let wordScore=0,wordIdx=0,wordTyped="",wordLocked=false;
 let readScore=0,readIdx=0,readTyped="",readLocked=false;
-let mathScore=0,mathStreak=0,mathAnswer=0,mathLocked=false,currentMathA=0,currentMathB=0,currentMathOp="+";
+let mathScore=0,mathStreak=0,mathAnswer=0,mathLocked=false,currentMathA=0,currentMathB=0,currentMathOp="+",currentMathEmoji="🍎";
+let speechReady=false,svVoice=null;
 
-function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
-function playClick(){try{const c=getAudioCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.setValueAtTime(440,c.currentTime);g.gain.setValueAtTime(.12,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.08);o.start(c.currentTime);o.stop(c.currentTime+.08);}catch(e){}}
-function playCorrect(){try{const c=getAudioCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.setValueAtTime(523,c.currentTime);o.frequency.setValueAtTime(659,c.currentTime+.1);o.frequency.setValueAtTime(784,c.currentTime+.2);g.gain.setValueAtTime(.25,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.4);o.start(c.currentTime);o.stop(c.currentTime+.4);}catch(e){}}
-function playWrong(){try{const c=getAudioCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.setValueAtTime(200,c.currentTime);o.frequency.setValueAtTime(150,c.currentTime+.15);g.gain.setValueAtTime(.15,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.3);o.start(c.currentTime);o.stop(c.currentTime+.3);}catch(e){}}
-function playStar(){try{const c=getAudioCtx();[523,659,784,1047,1319].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.setValueAtTime(f,c.currentTime+i*.1);g.gain.setValueAtTime(.18,c.currentTime+i*.1);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+i*.1+.2);o.start(c.currentTime+i*.1);o.stop(c.currentTime+i*.1+.2);});}catch(e){}}
+// ===== AUDIO =====
+function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx}
+function playClick(){try{const c=getAudioCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.setValueAtTime(440,c.currentTime);g.gain.setValueAtTime(.12,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.08);o.start(c.currentTime);o.stop(c.currentTime+.08)}catch(e){}}
+function playCorrect(){try{const c=getAudioCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.setValueAtTime(523,c.currentTime);o.frequency.setValueAtTime(659,c.currentTime+.1);o.frequency.setValueAtTime(784,c.currentTime+.2);g.gain.setValueAtTime(.25,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.4);o.start(c.currentTime);o.stop(c.currentTime+.4)}catch(e){}}
+function playWrong(){try{const c=getAudioCtx(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.setValueAtTime(200,c.currentTime);o.frequency.setValueAtTime(150,c.currentTime+.15);g.gain.setValueAtTime(.15,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.3);o.start(c.currentTime);o.stop(c.currentTime+.3)}catch(e){}}
+function playStar(){try{const c=getAudioCtx();[523,659,784,1047,1319].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.setValueAtTime(f,c.currentTime+i*.1);g.gain.setValueAtTime(.18,c.currentTime+i*.1);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+i*.1+.2);o.start(c.currentTime+i*.1);o.stop(c.currentTime+i*.1+.2)})}catch(e){}}
 
-function speakLetter(){
-  if(!targetLetter)return;
-  try{
-    const u=new SpeechSynthesisUtterance();
-    const voices=speechSynthesis.getVoices();
-    const sv=voices.find(v=>v.lang.startsWith('sv'));
-    if(sv)u.voice=sv;
-    u.lang='sv-SE'; u.rate=0.65; u.pitch=1.2;
-    u.text=targetLetter.toLowerCase();
-    speechSynthesis.cancel(); speechSynthesis.speak(u);
-  }catch(e){}
+// ===== SPEECH =====
+function initVoices(){if(!('speechSynthesis' in window))return;const lv=()=>{const v=speechSynthesis.getVoices();svVoice=v.find(x=>x.lang&&x.lang.startsWith('sv'))||null;if(v.length>0)speechReady=true};lv();speechSynthesis.onvoiceschanged=lv;setTimeout(lv,500);setTimeout(lv,1500);setTimeout(lv,3000)}
+function speakCurrentLetter(){
+  if(!targetLetter||!('speechSynthesis' in window))return;
+  const btn=document.getElementById('letter-sound-btn');btn.classList.add('speaking');setTimeout(()=>btn.classList.remove('speaking'),1000);
+  try{speechSynthesis.cancel();if(!speechReady){const u=new SpeechSynthesisUtterance('');u.volume=0;speechSynthesis.speak(u);speechReady=true;const v=speechSynthesis.getVoices();svVoice=v.find(x=>x.lang&&x.lang.startsWith('sv'))||null}
+  const u=new SpeechSynthesisUtterance();u.lang='sv-SE';if(svVoice)u.voice=svVoice;u.rate=0.6;u.pitch=1.1;u.volume=1;u.text=targetLetter.toLowerCase();speechSynthesis.speak(u)}catch(e){}
 }
 
-function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
-function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-'+id).classList.add('active');if(id==='menu')setupMenu();}
-function createParticles(cid,color){const el=document.getElementById(cid);if(!el)return;el.innerHTML='';for(let i=0;i<10;i++){const d=document.createElement('div');d.className='particle';const s=20+Math.random()*50;d.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;top:${Math.random()*100}%;background:${color};opacity:${.04+Math.random()*.06};animation:floatP ${8+Math.random()*10}s ${Math.random()*5}s ease-in-out infinite;`;el.appendChild(d);}}
-function showConfetti(cid){const el=document.getElementById(cid);if(!el)return;el.innerHTML='';const cols=["#FF6B9D","#7C5CFC","#FFD93D","#6BCB77","#FF8B3D","#4FC3F7"];for(let i=0;i<30;i++){const d=document.createElement('div');d.className='confetti-piece';const s=8+Math.random()*12;d.style.cssText=`left:${Math.random()*100}%;top:-5%;width:${s}px;height:${s}px;background:${cols[i%6]};border-radius:${s>14?'50%':'2px'};transform:rotate(${Math.random()*360}deg);animation:confettiFall 1.5s ${Math.random()*.5}s ease-in forwards;`;el.appendChild(d);}setTimeout(()=>el.innerHTML='',2500);}
+// ===== HELPERS =====
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('screen-'+id).classList.add('active');if(id==='menu')setupMenu()}
+function createParticles(cid,color){const el=document.getElementById(cid);if(!el)return;el.innerHTML='';for(let i=0;i<10;i++){const d=document.createElement('div');d.className='particle';const s=20+Math.random()*50;d.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;top:${Math.random()*100}%;background:${color};opacity:${.04+Math.random()*.06};animation:floatP ${8+Math.random()*10}s ${Math.random()*5}s ease-in-out infinite;`;el.appendChild(d)}}
+function showConfetti(cid){const el=document.getElementById(cid);if(!el)return;el.innerHTML='';const cols=["#FF6B9D","#7C5CFC","#FFD93D","#6BCB77","#FF8B3D","#4FC3F7"];for(let i=0;i<30;i++){const d=document.createElement('div');d.className='confetti-piece';const s=8+Math.random()*12;d.style.cssText=`left:${Math.random()*100}%;top:-5%;width:${s}px;height:${s}px;background:${cols[i%6]};border-radius:${s>14?'50%':'2px'};transform:rotate(${Math.random()*360}deg);animation:confettiFall 1.5s ${Math.random()*.5}s ease-in forwards;`;el.appendChild(d)}setTimeout(()=>el.innerHTML='',2500)}
 
 function selectProfile(key){
-  currentProfile=key; const p=PROFILES[key];
-  document.documentElement.style.setProperty('--accent',p.color);
-  document.documentElement.style.setProperty('--accent-light',p.color+'22');
-  if(p.age===4)speechSynthesis.getVoices();
+  currentProfile=key;const p=PROFILES[key];
+  document.documentElement.style.setProperty('--accent',p.color);document.documentElement.style.setProperty('--accent-light',p.color+'22');
+  try{getAudioCtx()}catch(e){}
+  if(p.age===4&&'speechSynthesis' in window){try{const u=new SpeechSynthesisUtterance('');u.volume=0;speechSynthesis.speak(u);speechReady=true}catch(e){}}
   showScreen('menu');
 }
 
@@ -400,208 +244,142 @@ function setupMenu(){
   createParticles('particles-menu',p.color);
   const items=document.getElementById('menu-items');items.innerHTML='';
   const modes=[];
-  if(p.age===4) modes.push({id:"letters",icon:"🔤",label:"Lär dig bokstäver",desc:"Lyssna och hitta rätt bokstav!"});
+  if(p.age===4)modes.push({id:"letters",icon:"🔤",label:"Lär dig bokstäver",desc:"Lyssna och hitta rätt bokstav!"});
   modes.push({id:"words",icon:"📝",label:"Skriv ord",desc:p.age===4?"Stava ord med bilder":"Stava svåra ord"});
   modes.push({id:"read",icon:"📖",label:p.age===4?"Läs meningar":"Skriv meningar",desc:p.age===4?"Skriv av korta meningar":"Skriv av längre meningar"});
   modes.push({id:"math",icon:"🔢",label:"Matte",desc:p.age===4?"Enkel addition 1–5":"Plus, minus och gånger!"});
-  modes.forEach(m=>{
-    const btn=document.createElement('button');btn.className='menu-btn';btn.onclick=()=>startGame(m.id);
-    btn.innerHTML=`<div class="icon-box" style="background:${p.color}15">${m.icon}</div><div><div class="label">${m.label}</div><div class="desc">${m.desc}</div></div>`;
-    items.appendChild(btn);
-  });
+  modes.forEach(m=>{const btn=document.createElement('button');btn.className='menu-btn';btn.onclick=()=>startGame(m.id);btn.innerHTML=`<div class="icon-box" style="background:${p.color}15">${m.icon}</div><div><div class="label">${m.label}</div><div class="desc">${m.desc}</div></div>`;items.appendChild(btn)});
 }
 
 function startGame(mode){
   const p=PROFILES[currentProfile];
-  if(mode==='letters'){letterScore=0;letterStreak=0;initLetterRound();}
-  else if(mode==='words'){wordScore=0;wordIdx=0;wordTyped="";initWordRound();}
-  else if(mode==='read'){readScore=0;readIdx=0;readTyped="";initReadRound();}
-  else if(mode==='math'){mathScore=0;mathStreak=0;initMathRound();}
+  if(mode==='letters'){letterScore=0;letterStreak=0;initLetterRound()}
+  else if(mode==='words'){wordScore=0;wordIdx=0;wordTyped="";initWordRound()}
+  else if(mode==='read'){readScore=0;readIdx=0;readTyped="";initReadRound()}
+  else if(mode==='math'){mathScore=0;mathStreak=0;initMathRound()}
   showScreen(mode);
   document.getElementById('screen-'+mode).style.background=`linear-gradient(135deg,${p.color}12 0%,#f8f7ff 100%)`;
   createParticles('particles-'+mode,p.color);
 }
 
-// ===== LETTER GAME (Lily) =====
+// ===== LETTER GAME =====
 function initLetterRound(){
-  const p=PROFILES[currentProfile],c=CONTENT[p.age]; letterLocked=false;
+  const p=PROFILES[currentProfile],c=CONTENT[p.age];letterLocked=false;
   targetLetter=c.letters[Math.floor(Math.random()*c.letters.length)];
-  const opts=new Set([targetLetter]);
-  while(opts.size<4) opts.add(c.letters[Math.floor(Math.random()*c.letters.length)]);
+  const opts=new Set([targetLetter]);while(opts.size<4)opts.add(c.letters[Math.floor(Math.random()*c.letters.length)]);
   const options=shuffle([...opts]);
-  document.getElementById('target-letter').textContent=targetLetter;
-  document.getElementById('target-letter').style.color=p.color;
-  document.getElementById('target-letter').style.textShadow=`0 4px 20px ${p.color}33`;
-  document.getElementById('letter-score').textContent=letterScore;
-  document.getElementById('letter-feedback').style.display='none';
-  const st=document.getElementById('letter-streak');
-  if(letterStreak>=3){st.style.display='inline-block';st.textContent='🔥 '+letterStreak;st.style.background=`linear-gradient(135deg,${p.color},#FFD93D)`;}else st.style.display='none';
+  document.getElementById('target-letter').textContent=targetLetter;document.getElementById('target-letter').style.color=p.color;document.getElementById('target-letter').style.textShadow=`0 4px 20px ${p.color}33`;
+  document.getElementById('letter-score').textContent=letterScore;document.getElementById('letter-feedback').style.display='none';document.getElementById('letter-sound-btn').classList.remove('speaking');
+  const st=document.getElementById('letter-streak');if(letterStreak>=3){st.style.display='inline-block';st.textContent='🔥 '+letterStreak;st.style.background=`linear-gradient(135deg,${p.color},#FFD93D)`}else st.style.display='none';
   const grid=document.getElementById('letter-options');grid.className='letter-grid cols-2';grid.innerHTML='';
-  options.forEach((l,i)=>{const btn=document.createElement('button');btn.className='letter-option';btn.textContent=l;btn.style.animation=`slideUp .3s ${i*.05}s ease-out both`;btn.onclick=()=>guessLetter(l,btn);grid.appendChild(btn);});
-  // Auto-speak
-  setTimeout(speakLetter,400);
+  options.forEach((l,i)=>{const btn=document.createElement('button');btn.className='letter-option';btn.textContent=l;btn.style.animation=`slideUp .3s ${i*.05}s ease-out both`;btn.onclick=()=>guessLetter(l,btn);grid.appendChild(btn)});
 }
 function guessLetter(letter,btn){
-  if(letterLocked)return; playClick();
-  if(letter===targetLetter){
-    letterLocked=true;letterScore++;letterStreak++;btn.classList.add('correct');
-    document.getElementById('letter-feedback').textContent='Rätt! 🎉';document.getElementById('letter-feedback').style.display='block';
-    document.getElementById('letter-score').textContent=letterScore;
-    if(letterStreak%5===0){playStar();showConfetti('confetti-letters');}else playCorrect();
-    const st=document.getElementById('letter-streak');if(letterStreak>=3){st.style.display='inline-block';st.textContent='🔥 '+letterStreak;}
-    setTimeout(initLetterRound,1200);
-  } else {
-    letterStreak=0;document.getElementById('letter-streak').style.display='none';playWrong();
-    btn.style.background='#fee';btn.style.borderColor='#fcc';setTimeout(()=>{btn.style.background='#fff';btn.style.borderColor='rgba(0,0,0,.06)';},500);
-  }
+  if(letterLocked)return;playClick();
+  if(letter===targetLetter){letterLocked=true;letterScore++;letterStreak++;btn.classList.add('correct');document.getElementById('letter-feedback').textContent='Rätt! 🎉';document.getElementById('letter-feedback').style.display='block';document.getElementById('letter-score').textContent=letterScore;if(letterStreak%5===0){playStar();showConfetti('confetti-letters')}else playCorrect();const st=document.getElementById('letter-streak');if(letterStreak>=3){st.style.display='inline-block';st.textContent='🔥 '+letterStreak}setTimeout(initLetterRound,1200)}
+  else{letterStreak=0;document.getElementById('letter-streak').style.display='none';playWrong();btn.style.background='#fee';btn.style.borderColor='#fcc';setTimeout(()=>{btn.style.background='#fff';btn.style.borderColor='rgba(0,0,0,.06)'},500)}
 }
 
 // ===== WORD GAME =====
-function initWordRound(){
-  const p=PROFILES[currentProfile],c=CONTENT[p.age],cur=c.words[wordIdx%c.words.length];
-  wordTyped="";wordLocked=false;
-  document.getElementById('word-image').textContent=cur.hint;
-  document.getElementById('word-score').textContent=wordScore;
-  document.getElementById('word-feedback').style.display='none';
-  renderWordSlots(cur.word);buildWordKeyboard(cur.word);
-}
-function renderWordSlots(target){
-  const p=PROFILES[currentProfile],el=document.getElementById('word-slots');el.innerHTML='';
-  for(let i=0;i<target.length;i++){
-    const d=document.createElement('div');d.className='letter-slot';
-    if(i<wordTyped.length){d.classList.add('typed');d.textContent=wordTyped[i];}
-    else if(i===wordTyped.length)d.classList.add('current');
-    el.appendChild(d);
-  }
-}
+function initWordRound(){const p=PROFILES[currentProfile],c=CONTENT[p.age],cur=c.words[wordIdx%c.words.length];wordTyped="";wordLocked=false;document.getElementById('word-image').textContent=cur.hint;document.getElementById('word-score').textContent=wordScore;document.getElementById('word-feedback').style.display='none';renderWordSlots(cur.word);buildWordKeyboard(cur.word)}
+function renderWordSlots(target){const el=document.getElementById('word-slots');el.innerHTML='';for(let i=0;i<target.length;i++){const d=document.createElement('div');d.className='letter-slot';if(i<wordTyped.length){d.classList.add('typed');d.textContent=wordTyped[i]}else if(i===wordTyped.length)d.classList.add('current');el.appendChild(d)}}
 function buildWordKeyboard(target){
   const p=PROFILES[currentProfile],c=CONTENT[p.age],el=document.getElementById('word-keyboard');el.innerHTML='';
-  if(p.age===4){
-    const needed=new Set(target.split("")),extras=new Set();
-    while(needed.size+extras.size<Math.min(8,target.length+4)){const r=c.letters[Math.floor(Math.random()*c.letters.length)];if(!needed.has(r))extras.add(r);}
-    const keys=shuffle([...needed,...extras]);
-    const div=document.createElement('div');div.className='simple-kb';
-    keys.forEach(k=>{const b=document.createElement('button');b.className='simple-key';b.textContent=k;b.onclick=()=>wordKeyPress(k);div.appendChild(b);});
-    const bk=document.createElement('button');bk.className='simple-key backspace';bk.textContent='⌫';bk.onclick=wordBackspace;div.appendChild(bk);
-    el.appendChild(div);
-  } else {
-    [["Q","W","E","R","T","Y","U","I","O","P","Å"],["A","S","D","F","G","H","J","K","L","Ö","Ä"],["Z","X","C","V","B","N","M"]].forEach((row,ri)=>{
-      const div=document.createElement('div');div.className='kb-row';
-      if(ri===2){const sp=document.createElement('div');sp.style.width='clamp(1rem,3vw,2rem)';div.appendChild(sp);}
-      row.forEach(k=>{const b=document.createElement('button');b.className='kb-key';b.textContent=k;b.onclick=()=>wordKeyPress(k);div.appendChild(b);});
-      if(ri===2){const bk=document.createElement('button');bk.className='kb-key big backspace';bk.textContent='⌫';bk.onclick=wordBackspace;div.appendChild(bk);}
-      el.appendChild(div);
-    });
-  }
+  if(p.age===4){const needed=new Set(target.split("")),extras=new Set();while(needed.size+extras.size<Math.min(8,target.length+4)){const r=c.letters[Math.floor(Math.random()*c.letters.length)];if(!needed.has(r))extras.add(r)}const keys=shuffle([...needed,...extras]);const div=document.createElement('div');div.className='simple-kb';keys.forEach(k=>{const b=document.createElement('button');b.className='simple-key';b.textContent=k;b.onclick=()=>wordKeyPress(k);div.appendChild(b)});const bk=document.createElement('button');bk.className='simple-key backspace';bk.textContent='⌫';bk.onclick=wordBackspace;div.appendChild(bk);el.appendChild(div)}
+  else{[["Q","W","E","R","T","Y","U","I","O","P","Å"],["A","S","D","F","G","H","J","K","L","Ö","Ä"],["Z","X","C","V","B","N","M"]].forEach((row,ri)=>{const div=document.createElement('div');div.className='kb-row';if(ri===2){const sp=document.createElement('div');sp.style.width='clamp(1rem,3vw,2rem)';div.appendChild(sp)}row.forEach(k=>{const b=document.createElement('button');b.className='kb-key';b.textContent=k;b.onclick=()=>wordKeyPress(k);div.appendChild(b)});if(ri===2){const bk=document.createElement('button');bk.className='kb-key big backspace';bk.textContent='⌫';bk.onclick=wordBackspace;div.appendChild(bk)}el.appendChild(div)})}
 }
-function wordKeyPress(key){
-  if(wordLocked)return;playClick();
-  const p=PROFILES[currentProfile],c=CONTENT[p.age],target=c.words[wordIdx%c.words.length].word;
-  const n=wordTyped+key;
-  if(target.startsWith(n)){wordTyped=n;renderWordSlots(target);
-    if(wordTyped===target){wordLocked=true;wordScore++;document.getElementById('word-score').textContent=wordScore;
-      document.getElementById('word-feedback').textContent='Bra jobbat! 🌟';document.getElementById('word-feedback').style.display='block';
-      if(wordScore%3===0){playStar();showConfetti('confetti-words');}else playCorrect();
-      setTimeout(()=>{wordIdx++;initWordRound();},1500);
-    }
-  } else playWrong();
-}
-function wordBackspace(){if(wordLocked)return;const c=CONTENT[PROFILES[currentProfile].age],t=c.words[wordIdx%c.words.length].word;wordTyped=wordTyped.slice(0,-1);renderWordSlots(t);}
+function wordKeyPress(key){if(wordLocked)return;playClick();const c=CONTENT[PROFILES[currentProfile].age],target=c.words[wordIdx%c.words.length].word,n=wordTyped+key;if(target.startsWith(n)){wordTyped=n;renderWordSlots(target);if(wordTyped===target){wordLocked=true;wordScore++;document.getElementById('word-score').textContent=wordScore;document.getElementById('word-feedback').textContent='Bra jobbat! 🌟';document.getElementById('word-feedback').style.display='block';if(wordScore%3===0){playStar();showConfetti('confetti-words')}else playCorrect();setTimeout(()=>{wordIdx++;initWordRound()},1500)}}else playWrong()}
+function wordBackspace(){if(wordLocked)return;const c=CONTENT[PROFILES[currentProfile].age],t=c.words[wordIdx%c.words.length].word;wordTyped=wordTyped.slice(0,-1);renderWordSlots(t)}
 
 // ===== READ GAME =====
-function initReadRound(){
-  const p=PROFILES[currentProfile],c=CONTENT[p.age],cur=c.sentences[readIdx%c.sentences.length];
-  readTyped="";readLocked=false;
-  document.getElementById('read-emoji').textContent=cur.emoji;
-  document.getElementById('read-target').textContent=cur.text;
-  document.getElementById('read-target').style.background=p.color+'08';
-  document.getElementById('read-score').textContent=readScore;
-  document.getElementById('read-feedback').style.display='none';
-  document.getElementById('read-hint-text').textContent=p.age===4?'Skriv av meningen (mellanslag läggs till automatiskt):':'Skriv av meningen:';
-  renderReadTyped(cur.text);buildReadKeyboard();
-}
-function renderReadTyped(target){
-  const p=PROFILES[currentProfile],el=document.getElementById('read-typed');
-  if(readTyped===""){el.innerHTML='<span style="color:#ccc">...</span><span class="cursor" style="color:'+p.color+'">|</span>';el.className='typed-display';}
-  else{el.textContent=readTyped;el.className='typed-display has-text';if(!readLocked){const c=document.createElement('span');c.className='cursor';c.style.color=p.color;c.textContent='|';el.appendChild(c);}}
-  if(readLocked)el.className='typed-display correct-border';
-}
-function buildReadKeyboard(){
-  const p=PROFILES[currentProfile],el=document.getElementById('read-keyboard');el.innerHTML='';
-  [["Q","W","E","R","T","Y","U","I","O","P","Å"],["A","S","D","F","G","H","J","K","L","Ö","Ä"],["Z","X","C","V","B","N","M"]].forEach(row=>{
-    const div=document.createElement('div');div.className='kb-row';
-    row.forEach(k=>{const b=document.createElement('button');b.className='kb-key';b.textContent=k;b.onclick=()=>readKeyPress(k);div.appendChild(b);});
-    el.appendChild(div);
-  });
-  const bot=document.createElement('div');bot.className='kb-row';
-  const bk=document.createElement('button');bk.className='kb-key big backspace';bk.textContent='⌫';bk.onclick=readBackspace;bot.appendChild(bk);
-  if(p.age>=6){const sp=document.createElement('button');sp.className='kb-key space';sp.textContent='mellanslag';sp.onclick=()=>readKeyPress(' ');bot.appendChild(sp);}
-  el.appendChild(bot);
-}
-function readKeyPress(key){
-  if(readLocked)return;playClick();
-  const p=PROFILES[currentProfile],c=CONTENT[p.age],target=c.sentences[readIdx%c.sentences.length].text;
-  let n=readTyped+key;
-  // Auto-space for Lily
-  if(p.age===4){while(n.length<target.length&&target[n.length]===' ')n+=' ';}
-  if(target.startsWith(n)){readTyped=n;renderReadTyped(target);
-    if(readTyped===target){readLocked=true;readScore++;document.getElementById('read-score').textContent=readScore;
-      document.getElementById('read-feedback').textContent='Fantastiskt! 🎉✨';document.getElementById('read-feedback').style.display='block';
-      renderReadTyped(target);if(readScore%2===0){playStar();showConfetti('confetti-read');}else playCorrect();
-      setTimeout(()=>{readIdx++;initReadRound();},1800);
-    }
-  } else playWrong();
-}
-function readBackspace(){
-  if(readLocked)return;
-  const p=PROFILES[currentProfile],c=CONTENT[p.age],target=c.sentences[readIdx%c.sentences.length].text;
-  readTyped=readTyped.slice(0,-1);
-  if(p.age===4){while(readTyped.length>0&&readTyped[readTyped.length-1]===' ')readTyped=readTyped.slice(0,-1);}
-  renderReadTyped(target);
-}
+function initReadRound(){const p=PROFILES[currentProfile],c=CONTENT[p.age],cur=c.sentences[readIdx%c.sentences.length];readTyped="";readLocked=false;document.getElementById('read-emoji').textContent=cur.emoji;document.getElementById('read-target').textContent=cur.text;document.getElementById('read-target').style.background=p.color+'08';document.getElementById('read-score').textContent=readScore;document.getElementById('read-feedback').style.display='none';document.getElementById('read-hint-text').textContent=p.age===4?'Skriv av meningen (mellanslag läggs till automatiskt):':'Skriv av meningen:';renderReadTyped(cur.text);buildReadKeyboard()}
+function renderReadTyped(target){const p=PROFILES[currentProfile],el=document.getElementById('read-typed');if(readTyped===""){el.innerHTML='<span style="color:#ccc">...</span><span class="cursor" style="color:'+p.color+'">|</span>';el.className='typed-display'}else{el.textContent=readTyped;el.className='typed-display has-text';if(!readLocked){const c=document.createElement('span');c.className='cursor';c.style.color=p.color;c.textContent='|';el.appendChild(c)}}if(readLocked)el.className='typed-display correct-border'}
+function buildReadKeyboard(){const p=PROFILES[currentProfile],el=document.getElementById('read-keyboard');el.innerHTML='';[["Q","W","E","R","T","Y","U","I","O","P","Å"],["A","S","D","F","G","H","J","K","L","Ö","Ä"],["Z","X","C","V","B","N","M"]].forEach(row=>{const div=document.createElement('div');div.className='kb-row';row.forEach(k=>{const b=document.createElement('button');b.className='kb-key';b.textContent=k;b.onclick=()=>readKeyPress(k);div.appendChild(b)});el.appendChild(div)});const bot=document.createElement('div');bot.className='kb-row';const bk=document.createElement('button');bk.className='kb-key big backspace';bk.textContent='⌫';bk.onclick=readBackspace;bot.appendChild(bk);if(p.age>=6){const sp=document.createElement('button');sp.className='kb-key space';sp.textContent='mellanslag';sp.onclick=()=>readKeyPress(' ');bot.appendChild(sp)}el.appendChild(bot)}
+function readKeyPress(key){if(readLocked)return;playClick();const p=PROFILES[currentProfile],c=CONTENT[p.age],target=c.sentences[readIdx%c.sentences.length].text;let n=readTyped+key;if(p.age===4){while(n.length<target.length&&target[n.length]===' ')n+=' '}if(target.startsWith(n)){readTyped=n;renderReadTyped(target);if(readTyped===target){readLocked=true;readScore++;document.getElementById('read-score').textContent=readScore;document.getElementById('read-feedback').textContent='Fantastiskt! 🎉✨';document.getElementById('read-feedback').style.display='block';renderReadTyped(target);if(readScore%2===0){playStar();showConfetti('confetti-read')}else playCorrect();setTimeout(()=>{readIdx++;initReadRound()},1800)}}else playWrong()}
+function readBackspace(){if(readLocked)return;readTyped=readTyped.slice(0,-1);const p=PROFILES[currentProfile];if(p.age===4){while(readTyped.length>0&&readTyped[readTyped.length-1]===' ')readTyped=readTyped.slice(0,-1)}const c=CONTENT[p.age],target=c.sentences[readIdx%c.sentences.length].text;renderReadTyped(target)}
 
 // ===== MATH GAME =====
 function initMathRound(){
-  const p=PROFILES[currentProfile]; mathLocked=false;
+  const p=PROFILES[currentProfile];mathLocked=false;
+  currentMathEmoji=MATH_EMOJIS[Math.floor(Math.random()*MATH_EMOJIS.length)];
   let a,b,op,answer;
+
   if(p.age===4){
-    op='+'; a=1+Math.floor(Math.random()*5); b=1+Math.floor(Math.random()*5); answer=a+b;
+    // Lily: addition only, 1-5
+    op='+';a=1+Math.floor(Math.random()*5);b=1+Math.floor(Math.random()*5);answer=a+b;
   } else {
-    const ops=['+','-','×']; op=ops[Math.floor(Math.random()*ops.length)];
-    if(op==='+'){a=1+Math.floor(Math.random()*15);b=1+Math.floor(Math.random()*(20-a));answer=a+b;}
-    else if(op==='-'){a=5+Math.floor(Math.random()*16);b=1+Math.floor(Math.random()*a);answer=a-b;}
-    else{a=2+Math.floor(Math.random()*9);b=2+Math.floor(Math.random()*5);answer=a*b;}
+    // Alice: +, -, and simple × (2-5 × 2-5)
+    const ops=['+','+','-','-','×']; // weighted: less multiplication
+    op=ops[Math.floor(Math.random()*ops.length)];
+    if(op==='+'){a=2+Math.floor(Math.random()*14);b=2+Math.floor(Math.random()*(20-a));answer=a+b}
+    else if(op==='-'){a=5+Math.floor(Math.random()*16);b=1+Math.floor(Math.random()*a);answer=a-b}
+    else{
+      // Simple multiplication: 2-5 × 2-5
+      a=2+Math.floor(Math.random()*4); // 2,3,4,5
+      b=2+Math.floor(Math.random()*4); // 2,3,4,5
+      answer=a*b;
+    }
   }
+
   currentMathA=a;currentMathB=b;currentMathOp=op;mathAnswer=answer;
   document.getElementById('math-score').textContent=mathScore;
   document.getElementById('math-feedback').style.display='none';
-  document.getElementById('math-hint').textContent=p.age===4?'Räkna ihop!':'Vad blir det?';
+
+  if(op==='×') document.getElementById('math-hint').textContent=`${a} grupper med ${b} stycken ${currentMathEmoji} — hur många totalt?`;
+  else document.getElementById('math-hint').textContent=p.age===4?'Räkna ihop!':'Vad blir det?';
+
   const st=document.getElementById('math-streak');
-  if(mathStreak>=3){st.style.display='inline-block';st.textContent='🔥 '+mathStreak;st.style.background=`linear-gradient(135deg,${p.color},#FFD93D)`;}else st.style.display='none';
+  if(mathStreak>=3){st.style.display='inline-block';st.textContent='🔥 '+mathStreak;st.style.background=`linear-gradient(135deg,${p.color},#FFD93D)`}else st.style.display='none';
+
   document.getElementById('math-problem').innerHTML=`${a} <span class="operator">${op}</span> ${b} <span class="equals">=</span> <span class="answer-box">&nbsp;</span>`;
-  
-  // Visual
+
+  // ===== VISUAL — always show =====
   const vis=document.getElementById('math-visual');vis.innerHTML='';
-  if(answer<=10 && (op==='+'||op==='-')){
-    const emoji=p.age===4?'🍎':'⭐';
-    const g1=document.createElement('span');g1.className='group';for(let i=0;i<a;i++)g1.textContent+=emoji;
+
+  if(op==='×'){
+    // Multiplication: show A groups of B items each
+    for(let g=0;g<a;g++){
+      if(g>0){const s=document.createElement('span');s.textContent=' ';vis.appendChild(s)}
+      const grp=document.createElement('span');grp.className='group';
+      for(let i=0;i<b;i++) grp.textContent+=currentMathEmoji;
+      vis.appendChild(grp);
+    }
+    const label=document.createElement('div');label.className='multiply-label';
+    label.textContent=`${a} grupper × ${b} st`;
+    vis.appendChild(label);
+  } else if(op==='+'){
+    const g1=document.createElement('span');g1.className='group';for(let i=0;i<a;i++)g1.textContent+=currentMathEmoji;vis.appendChild(g1);
+    const os=document.createElement('span');os.className='op-symbol';os.textContent=' + ';vis.appendChild(os);
+    const g2=document.createElement('span');g2.className='group';for(let i=0;i<b;i++)g2.textContent+=currentMathEmoji;vis.appendChild(g2);
+  } else {
+    // Subtraction: show A items, with last B crossed out / faded
+    const g1=document.createElement('span');g1.className='group';
+    for(let i=0;i<a;i++){
+      const s=document.createElement('span');
+      s.textContent=currentMathEmoji;
+      if(i>=a-b){s.style.opacity='0.25';s.style.textDecoration='line-through';s.style.filter='grayscale(1)'}
+      g1.appendChild(s);
+    }
     vis.appendChild(g1);
-    const os=document.createElement('span');os.textContent=op==='+'?' + ':' − ';os.style.fontWeight='700';os.style.fontSize='clamp(1.5rem,4vw,2rem)';vis.appendChild(os);
-    const g2=document.createElement('span');g2.className='group';for(let i=0;i<b;i++)g2.textContent+=emoji;
-    vis.appendChild(g2);
+    const label=document.createElement('div');label.className='multiply-label';
+    label.textContent=`${a} st − ta bort ${b} st`;
+    vis.appendChild(label);
   }
-  
+
   // Options
   const opts=new Set([answer]);
   while(opts.size<4){
-    let w; if(p.age===4){w=Math.max(0,answer+Math.floor(Math.random()*5)-2);}
-    else{w=Math.max(0,answer+Math.floor(Math.random()*11)-5);}
+    let w;
+    if(p.age===4) w=Math.max(0,answer+Math.floor(Math.random()*5)-2);
+    else if(op==='×') w=Math.max(1,answer+Math.floor(Math.random()*7)-3);
+    else w=Math.max(0,answer+Math.floor(Math.random()*11)-5);
     if(w!==answer)opts.add(w);
   }
   const options=shuffle([...opts]);
   const oc=document.getElementById('math-options');oc.innerHTML='';
-  options.forEach((o,i)=>{const btn=document.createElement('button');btn.className='math-option';btn.textContent=o;btn.style.animation=`slideUp .3s ${i*.05}s ease-out both`;btn.onclick=()=>guessMath(o,btn);oc.appendChild(btn);});
+  options.forEach((o,i)=>{const btn=document.createElement('button');btn.className='math-option';btn.textContent=o;btn.style.animation=`slideUp .3s ${i*.05}s ease-out both`;btn.onclick=()=>guessMath(o,btn);oc.appendChild(btn)});
 }
+
 function guessMath(guess,btn){
   if(mathLocked)return;playClick();const p=PROFILES[currentProfile];
   if(guess===mathAnswer){
@@ -609,17 +387,18 @@ function guessMath(guess,btn){
     document.getElementById('math-problem').innerHTML=`${currentMathA} <span class="operator">${currentMathOp}</span> ${currentMathB} <span class="equals">=</span> <span style="color:#6BCB77;font-weight:700">${mathAnswer}</span>`;
     document.getElementById('math-feedback').textContent='Rätt! 🎉';document.getElementById('math-feedback').style.display='block';
     document.getElementById('math-score').textContent=mathScore;
-    if(mathStreak%5===0){playStar();showConfetti('confetti-math');}else playCorrect();
-    const st=document.getElementById('math-streak');if(mathStreak>=3){st.style.display='inline-block';st.textContent='🔥 '+mathStreak;}
+    if(mathStreak%5===0){playStar();showConfetti('confetti-math')}else playCorrect();
+    const st=document.getElementById('math-streak');if(mathStreak>=3){st.style.display='inline-block';st.textContent='🔥 '+mathStreak}
     setTimeout(initMathRound,1300);
-  } else {
+  }else{
     mathStreak=0;document.getElementById('math-streak').style.display='none';playWrong();
     btn.classList.add('wrong-pick');setTimeout(()=>btn.classList.remove('wrong-pick'),500);
   }
 }
 
+// ===== INIT =====
 createParticles('particles-profile','#a78bfa');
-if('speechSynthesis' in window){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();}
+initVoices();
 </script>
 </body>
 </html>
