@@ -46,6 +46,8 @@
   .game-screen{flex-direction:column;padding:1.5rem;position:relative}
   .game-inner{position:relative;z-index:1;max-width:700px;margin:0 auto;width:100%;flex:1;display:flex;flex-direction:column}
   .game-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+  .menu-back-btn{background:rgba(124,92,252,.15);border:3px solid rgba(124,92,252,.3);border-radius:20px;padding:1rem 1.5rem;font-size:3.5rem;line-height:1;transition:all .2s;box-shadow:0 4px 15px rgba(0,0,0,.1);font-weight:700}
+  .menu-back-btn:active{background:rgba(124,92,252,.25);transform:scale(0.95)!important}
   .score{font-family:'Fredoka',sans-serif;font-size:1.1rem;color:#2d1b69}
   .streak-badge{color:#fff;border-radius:12px;padding:.2rem .8rem;font-size:.9rem;animation:pulse 1s infinite;display:inline-block;margin-left:.5rem}
   .card{text-align:center;background:#fff;border-radius:32px;padding:clamp(1.5rem,4vw,2.5rem);box-shadow:0 8px 40px rgba(0,0,0,.06);margin-bottom:1.5rem}
@@ -89,7 +91,8 @@
   .simple-key{font-family:'Fredoka',sans-serif;font-size:clamp(1.4rem,4vw,1.8rem);font-weight:600;background:#fff;color:#2d1b69;border:2px solid rgba(0,0,0,.08);border-radius:14px;width:clamp(3rem,10vw,4rem);height:clamp(3rem,10vw,4rem);box-shadow:0 3px 8px rgba(0,0,0,.06)}
   .simple-key.backspace{background:#fee;color:#c33;border-color:rgba(200,50,50,.15);font-size:clamp(1rem,2.5vw,1.2rem);width:auto;padding:0 1rem}
 
-  .math-problem{font-family:'Fredoka',sans-serif;font-size:clamp(3rem,10vw,5rem);color:#2d1b69;font-weight:700;line-height:1.2}
+  .math-problem{font-family:'Fredoka',sans-serif;font-size:clamp(3rem,10vw,5rem);color:#2d1b69;font-weight:700;line-height:1.2;cursor:pointer;transition:background .2s;padding:.5rem;border-radius:16px;margin:0 -.5rem}
+  .math-problem:active{background:rgba(0,0,0,.05)!important}
   .math-problem .operator{color:var(--accent,#7C5CFC)}
   .math-problem .equals{color:#888}
   .math-problem .answer-box{display:inline-block;min-width:clamp(2.5rem,8vw,3.5rem);border-bottom:4px solid var(--accent,#7C5CFC);margin-left:.3rem}
@@ -97,7 +100,8 @@
   .math-option{font-family:'Fredoka',sans-serif;font-size:clamp(2rem,6vw,3rem);font-weight:600;background:#fff;color:#2d1b69;border:2px solid rgba(0,0,0,.06);border-radius:20px;padding:clamp(1rem,3vw,1.5rem);box-shadow:0 4px 15px rgba(0,0,0,.06);transition:all .2s}
   .math-option.correct{background:linear-gradient(135deg,#6BCB77,#4CAF50);color:#fff}
   .math-option.wrong-pick{background:#fee;border-color:#fcc}
-  .math-visual{display:flex;justify-content:center;align-items:center;gap:.6rem;margin:1rem 0;flex-wrap:wrap;font-size:clamp(1.3rem,3.5vw,1.8rem);line-height:1.4}
+  .math-visual{display:flex;justify-content:center;align-items:center;gap:.6rem;margin:1rem 0;flex-wrap:wrap;font-size:clamp(1.3rem,3.5vw,1.8rem);line-height:1.4;cursor:pointer;padding:.5rem;border-radius:16px;transition:background .2s}
+  .math-visual:active{background:rgba(0,0,0,.05)!important}
   .math-visual .group{display:inline-flex;gap:.1rem;flex-wrap:wrap;justify-content:center;background:rgba(0,0,0,.03);border-radius:12px;padding:.3rem .5rem}
   .math-visual .op-symbol{font-weight:700;font-size:clamp(1.5rem,4vw,2rem);color:var(--accent,#7C5CFC)}
   .math-visual .multiply-label{font-family:'Fredoka',sans-serif;font-size:clamp(.85rem,2vw,1rem);color:#888;text-align:center;width:100%;margin-top:.3rem}
@@ -142,7 +146,7 @@
   <div id="particles-letters" style="position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0"></div>
   <div id="confetti-letters" style="position:fixed;inset:0;pointer-events:none;z-index:1000"></div>
   <div class="game-inner">
-    <div class="game-top"><button class="back-btn" onclick="showScreen('menu')">&#8592; Meny</button><div class="score">&#11088; <span id="letter-score">0</span> <span id="letter-streak" class="streak-badge" style="display:none"></span></div></div>
+    <div class="game-top"><button class="menu-back-btn" onclick="showScreen('menu')">←</button><div class="score">⭐ <span id="letter-score">0</span> <span id="letter-streak" class="streak-badge" style="display:none"></span></div></div>
     <div class="card">
       <p class="hint">Hitta bokstaven:</p>
       <div class="big-letter" id="target-letter"></div>
@@ -157,7 +161,7 @@
   <div id="particles-words" style="position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0"></div>
   <div id="confetti-words" style="position:fixed;inset:0;pointer-events:none;z-index:1000"></div>
   <div class="game-inner">
-    <div class="game-top"><button class="back-btn" onclick="showScreen('menu')">&#8592; Meny</button><div class="score">&#11088; <span id="word-score">0</span></div></div>
+    <div class="game-top"><button class="menu-back-btn" onclick="showScreen('menu')">←</button><div class="score">⭐ <span id="word-score">0</span></div></div>
     <div class="card">
       <div class="word-image" id="word-image" onclick="speakCurrentWord()"></div>
       <div class="tap-hint" id="word-tap-hint">tryck p&aring; bilden f&ouml;r att lyssna</div>
@@ -173,7 +177,7 @@
   <div id="particles-read" style="position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0"></div>
   <div id="confetti-read" style="position:fixed;inset:0;pointer-events:none;z-index:1000"></div>
   <div class="game-inner">
-    <div class="game-top"><button class="back-btn" onclick="showScreen('menu')">&#8592; Meny</button><div class="score">&#11088; <span id="read-score">0</span></div></div>
+    <div class="game-top"><button class="menu-back-btn" onclick="showScreen('menu')">←</button><div class="score">⭐ <span id="read-score">0</span></div></div>
     <div class="card">
       <div class="word-image" id="read-emoji" onclick="speakCurrentSentence()"></div>
       <p class="hint" id="read-hint-text">Skriv av meningen:</p>
@@ -189,7 +193,7 @@
   <div id="particles-math" style="position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0"></div>
   <div id="confetti-math" style="position:fixed;inset:0;pointer-events:none;z-index:1000"></div>
   <div class="game-inner">
-    <div class="game-top"><button class="back-btn" onclick="showScreen('menu')">&#8592; Meny</button><div class="score">&#11088; <span id="math-score">0</span> <span id="math-streak" class="streak-badge" style="display:none"></span></div></div>
+    <div class="game-top"><button class="menu-back-btn" onclick="showScreen('menu')">←</button><div class="score">⭐ <span id="math-score">0</span> <span id="math-streak" class="streak-badge" style="display:none"></span></div></div>
     <div class="card"><p class="hint" id="math-hint"></p><div class="math-problem" id="math-problem"></div><div class="math-visual" id="math-visual"></div><div id="math-feedback" class="correct-msg" style="display:none"></div></div>
     <div class="math-options" id="math-options"></div>
   </div>
@@ -214,8 +218,8 @@ var MATH_EMOJIS=["\u{1F34E}","\u{1F31F}","\u{1F36A}","\u{1F431}","\u{1F338}","\u
 
 var currentProfile=null,audioCtx=null;
 var letterScore=0,letterStreak=0,targetLetter="",letterLocked=false;
-var wordScore=0,wordIdx=0,wordTyped="",wordLocked=false;
-var readScore=0,readIdx=0,readTyped="",readLocked=false;
+var wordScore=0,wordIdx=0,wordTyped="",wordLocked=false,shuffledWords=[];
+var readScore=0,readIdx=0,readTyped="",readLocked=false,shuffledSentences=[];
 var mathScore=0,mathStreak=0,mathAnswer=0,mathLocked=false,currentMathA=0,currentMathB=0,currentMathOp="+",currentMathEmoji="\u{1F34E}";
 var speechReady=false,svVoice=null;
 
@@ -238,7 +242,17 @@ function speakText(text,rate){
   try{
     speechSynthesis.cancel();
     if(!speechReady){var unlock=new SpeechSynthesisUtterance('');unlock.volume=0;speechSynthesis.speak(unlock);speechReady=true;var v=speechSynthesis.getVoices();svVoice=null;for(var i=0;i<v.length;i++){if(v[i].lang&&v[i].lang.indexOf('sv')===0){svVoice=v[i];break}}}
-    var u=new SpeechSynthesisUtterance();u.lang='sv-SE';if(svVoice)u.voice=svVoice;u.rate=rate||0.7;u.pitch=1.1;u.volume=1;u.text=text.toLowerCase();speechSynthesis.speak(u);
+    var u=new SpeechSynthesisUtterance();
+    u.lang='sv-SE'; // ALLTID svenska
+    // Hitta och tvinga svensk röst
+    var voices=speechSynthesis.getVoices();
+    for(var i=0;i<voices.length;i++){
+      if(voices[i].lang&&voices[i].lang.indexOf('sv')===0){
+        u.voice=voices[i];
+        break;
+      }
+    }
+    u.rate=rate||0.7;u.pitch=1.1;u.volume=1;u.text=text.toLowerCase();speechSynthesis.speak(u);
   }catch(e){}
 }
 
@@ -248,15 +262,35 @@ function speakLetter(letter){
 }
 
 function speakCurrentWord(){
-  var c=CONTENT[PROFILES[currentProfile].age];
-  var cur=c.words[wordIdx%c.words.length];
-  speakText(cur.word,0.6);
+  if(wordIdx<shuffledWords.length){
+    var cur=shuffledWords[wordIdx];
+    speakText(cur.word,0.6);
+  }
 }
 
 function speakCurrentSentence(){
-  var c=CONTENT[PROFILES[currentProfile].age];
-  var cur=c.sentences[readIdx%c.sentences.length];
-  speakText(cur.text,0.7);
+  if(readIdx<shuffledSentences.length){
+    var cur=shuffledSentences[readIdx];
+    speakText(cur.text,0.7);
+  }
+}
+
+function speakCurrentMath(){
+  var opText='';
+  if(currentMathOp==='+')opText='plus';
+  else if(currentMathOp==='-')opText='minus';
+  else if(currentMathOp==='×')opText='gånger';
+  var text=currentMathA+' '+opText+' '+currentMathB;
+  speakText(text,0.7);
+}
+
+function speakMathAnswer(){
+  var opText='';
+  if(currentMathOp==='+')opText='plus';
+  else if(currentMathOp==='-')opText='minus';
+  else if(currentMathOp==='×')opText='gånger';
+  var text=currentMathA+' '+opText+' '+currentMathB+' är lika med '+mathAnswer;
+  speakText(text,0.7);
 }
 
 // HELPERS
@@ -291,9 +325,18 @@ function setupMenu(){
 
 function startGame(mode){
   var p=PROFILES[currentProfile];
+  var c=CONTENT[p.age];
   if(mode==='letters'){letterScore=0;letterStreak=0;initLetterRound()}
-  else if(mode==='words'){wordScore=0;wordIdx=0;wordTyped="";initWordRound()}
-  else if(mode==='read'){readScore=0;readIdx=0;readTyped="";initReadRound()}
+  else if(mode==='words'){
+    wordScore=0;wordIdx=0;wordTyped="";
+    shuffledWords=shuffle(c.words.slice());
+    initWordRound();
+  }
+  else if(mode==='read'){
+    readScore=0;readIdx=0;readTyped="";
+    shuffledSentences=shuffle(c.sentences.slice());
+    initReadRound();
+  }
   else if(mode==='math'){mathScore=0;mathStreak=0;initMathRound()}
   showScreen(mode);
   document.getElementById('screen-'+mode).style.background='linear-gradient(135deg,'+p.color+'12 0%,#f8f7ff 100%)';
@@ -337,7 +380,8 @@ function guessLetter(letter,btn){
 
 // WORD GAME
 function initWordRound(){
-  var p=PROFILES[currentProfile],c=CONTENT[p.age],cur=c.words[wordIdx%c.words.length];
+  if(wordIdx>=shuffledWords.length){shuffledWords=shuffle(shuffledWords);wordIdx=0}
+  var p=PROFILES[currentProfile],cur=shuffledWords[wordIdx];
   wordTyped="";wordLocked=false;
   document.getElementById('word-image').textContent=cur.hint;
   document.getElementById('word-score').textContent=wordScore;
@@ -377,7 +421,7 @@ function buildWordKeyboard(target){
 function wordKeyPress(key){
   if(wordLocked)return;playClick();
   speakLetter(key);
-  var c=CONTENT[PROFILES[currentProfile].age],target=c.words[wordIdx%c.words.length].word;
+  var target=shuffledWords[wordIdx].word;
   var n=wordTyped+key;
   if(target.indexOf(n)===0){
     wordTyped=n;renderWordSlots(target);
@@ -395,13 +439,14 @@ function wordKeyPress(key){
 
 function wordBackspace(){
   if(wordLocked)return;
-  var c=CONTENT[PROFILES[currentProfile].age],t=c.words[wordIdx%c.words.length].word;
+  var t=shuffledWords[wordIdx].word;
   wordTyped=wordTyped.slice(0,-1);renderWordSlots(t);
 }
 
 // READ GAME
 function initReadRound(){
-  var p=PROFILES[currentProfile],c=CONTENT[p.age],cur=c.sentences[readIdx%c.sentences.length];
+  if(readIdx>=shuffledSentences.length){shuffledSentences=shuffle(shuffledSentences);readIdx=0}
+  var p=PROFILES[currentProfile],cur=shuffledSentences[readIdx];
   readTyped="";readLocked=false;
   document.getElementById('read-emoji').textContent=cur.emoji;
   document.getElementById('read-target').textContent=cur.text;
@@ -435,7 +480,7 @@ function buildReadKeyboard(){
 function readKeyPress(key){
   if(readLocked)return;playClick();
   if(key!==' ')speakLetter(key);
-  var p=PROFILES[currentProfile],c=CONTENT[p.age],target=c.sentences[readIdx%c.sentences.length].text;
+  var p=PROFILES[currentProfile],target=shuffledSentences[readIdx].text;
   var n=readTyped+key;
   if(p.age===4){while(n.length<target.length&&target[n.length]===' ')n+=' '}
   if(target.indexOf(n)===0){
@@ -457,7 +502,7 @@ function readBackspace(){
   if(readLocked)return;readTyped=readTyped.slice(0,-1);
   var p=PROFILES[currentProfile];
   if(p.age===4){while(readTyped.length>0&&readTyped[readTyped.length-1]===' ')readTyped=readTyped.slice(0,-1)}
-  var c=CONTENT[p.age],target=c.sentences[readIdx%c.sentences.length].text;
+  var target=shuffledSentences[readIdx].text;
   renderReadTyped(target);
 }
 
@@ -479,8 +524,10 @@ function initMathRound(){
   var st=document.getElementById('math-streak');
   if(mathStreak>=3){st.style.display='inline-block';st.textContent='\u{1F525} '+mathStreak;st.style.background='linear-gradient(135deg,'+p.color+',#FFD93D)'}else st.style.display='none';
   document.getElementById('math-problem').innerHTML=a+' <span class="operator">'+op+'</span> '+b+' <span class="equals">=</span> <span class="answer-box">&nbsp;</span>';
+  document.getElementById('math-problem').onclick=speakCurrentMath;
 
   var vis=document.getElementById('math-visual');vis.innerHTML='';
+  vis.onclick=speakCurrentMath;
   if(op==='\u00D7'){
     for(var g=0;g<a;g++){if(g>0){var sp=document.createElement('span');sp.textContent=' ';vis.appendChild(sp)}var grp=document.createElement('span');grp.className='group';var txt='';for(var i=0;i<b;i++)txt+=currentMathEmoji;grp.textContent=txt;vis.appendChild(grp)}
     var label=document.createElement('div');label.className='multiply-label';label.textContent=a+' grupper \u00D7 '+b+' st';vis.appendChild(label);
@@ -511,7 +558,8 @@ function guessMath(guess,btn){
     document.getElementById('math-score').textContent=mathScore;
     if(mathStreak%5===0){playStar();showConfetti('confetti-math')}else playCorrect();
     var st=document.getElementById('math-streak');if(mathStreak>=3){st.style.display='inline-block';st.textContent='\u{1F525} '+mathStreak}
-    setTimeout(initMathRound,1300);
+    setTimeout(speakMathAnswer,400);
+    setTimeout(initMathRound,1800);
   }else{
     mathStreak=0;document.getElementById('math-streak').style.display='none';playWrong();
     btn.classList.add('wrong-pick');setTimeout(function(){btn.classList.remove('wrong-pick')},500);
