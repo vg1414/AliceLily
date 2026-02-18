@@ -49,8 +49,10 @@
   .game-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
   .menu-back-btn{background:rgba(124,92,252,.15);border:3px solid rgba(124,92,252,.3);border-radius:20px;padding:1rem 1.5rem;font-size:3.5rem;line-height:1;transition:all .2s;box-shadow:0 4px 15px rgba(0,0,0,.1);font-weight:700}
   .menu-back-btn:active{background:rgba(124,92,252,.25);transform:scale(0.95)!important}
-  .score{font-family:'Fredoka',sans-serif;font-size:1.1rem;color:#2d1b69}
-  .streak-badge{color:#fff;border-radius:12px;padding:.2rem .8rem;font-size:.9rem;animation:pulse 1s infinite;display:inline-block;margin-left:.5rem}
+  .score-bar-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:.2rem}
+  .score-num{font-family:'Fredoka',sans-serif;font-size:.95rem;color:#2d1b69;text-align:right}
+  .progress-track{background:rgba(0,0,0,.1);border-radius:99px;height:16px;width:clamp(130px,38vw,210px);position:relative;overflow:hidden}
+  .progress-fill{height:100%;border-radius:99px;transition:width .4s cubic-bezier(.34,1.56,.64,1)}
   .card{text-align:center;background:#fff;border-radius:32px;padding:clamp(1.5rem,4vw,2.5rem);box-shadow:0 8px 40px rgba(0,0,0,.06);margin-bottom:1.5rem}
   .card .hint{font-size:clamp(.9rem,2.2vw,1.1rem);color:#888;margin-bottom:.8rem}
   .correct-msg{font-family:'Fredoka',sans-serif;font-size:clamp(1.2rem,3vw,1.5rem);color:#6BCB77;margin-top:.8rem;animation:bounceIn .3s ease-out}
@@ -147,7 +149,7 @@
   <div id="particles-letters" style="position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0"></div>
   <div id="confetti-letters" style="position:fixed;inset:0;pointer-events:none;z-index:1000"></div>
   <div class="game-inner">
-    <div class="game-top"><button class="menu-back-btn" onclick="showScreen('menu')">←</button><div class="score">⭐ <span id="letter-score">0</span> <span id="letter-streak" class="streak-badge" style="display:none"></span></div></div>
+    <div class="game-top"><button class="menu-back-btn" onclick="showScreen('menu')">&#8592;</button><div class="score-bar-wrap"><div class="score-num" id="letter-score-num">0 p</div><div class="progress-track"><div class="progress-fill" id="letter-progress" style="width:0%;background:var(--accent,#7C5CFC)"></div></div></div></div>
     <div class="card">
       <p class="hint">Hitta bokstaven:</p>
       <div class="big-letter" id="target-letter"></div>
@@ -162,7 +164,7 @@
   <div id="particles-words" style="position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0"></div>
   <div id="confetti-words" style="position:fixed;inset:0;pointer-events:none;z-index:1000"></div>
   <div class="game-inner">
-    <div class="game-top"><button class="menu-back-btn" onclick="showScreen('menu')">←</button><div class="score">⭐ <span id="word-score">0</span></div></div>
+    <div class="game-top"><button class="menu-back-btn" onclick="showScreen('menu')">&#8592;</button><div class="score-bar-wrap"><div class="score-num" id="word-score-num">0 p</div><div class="progress-track"><div class="progress-fill" id="word-progress" style="width:0%;background:var(--accent,#7C5CFC)"></div></div></div></div>
     <div class="card">
       <div class="word-image" id="word-image" onclick="speakCurrentWord()"></div>
       <div class="tap-hint" id="word-tap-hint">tryck p&aring; bilden f&ouml;r att lyssna</div>
@@ -178,9 +180,10 @@
   <div id="particles-read" style="position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0"></div>
   <div id="confetti-read" style="position:fixed;inset:0;pointer-events:none;z-index:1000"></div>
   <div class="game-inner">
-    <div class="game-top"><button class="menu-back-btn" onclick="showScreen('menu')">←</button><div class="score">⭐ <span id="read-score">0</span></div></div>
+    <div class="game-top"><button class="menu-back-btn" onclick="showScreen('menu')">&#8592;</button><div class="score-bar-wrap"><div class="score-num" id="read-score-num">0 p</div><div class="progress-track"><div class="progress-fill" id="read-progress" style="width:0%;background:var(--accent,#7C5CFC)"></div></div></div></div>
     <div class="card">
       <div class="word-image" id="read-emoji" onclick="speakCurrentSentence()"></div>
+      <div class="tap-hint">tryck p&aring; bilden eller meningen f&ouml;r att lyssna</div>
       <p class="hint" id="read-hint-text">Skriv av meningen:</p>
       <div class="sentence-display" id="read-target" onclick="speakCurrentSentence()"></div>
       <div class="typed-display" id="read-typed"><span style="color:#ccc">...</span></div>
@@ -194,8 +197,8 @@
   <div id="particles-math" style="position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0"></div>
   <div id="confetti-math" style="position:fixed;inset:0;pointer-events:none;z-index:1000"></div>
   <div class="game-inner">
-    <div class="game-top"><button class="menu-back-btn" onclick="showScreen('menu')">←</button><div class="score">⭐ <span id="math-score">0</span> <span id="math-streak" class="streak-badge" style="display:none"></span></div></div>
-    <div class="card"><p class="hint" id="math-hint"></p><div class="math-problem" id="math-problem"></div><div class="math-visual" id="math-visual"></div><div id="math-feedback" class="correct-msg" style="display:none"></div></div>
+    <div class="game-top"><button class="menu-back-btn" onclick="showScreen('menu')">&#8592;</button><div class="score-bar-wrap"><div class="score-num" id="math-score-num">0 p</div><div class="progress-track"><div class="progress-fill" id="math-progress" style="width:0%;background:var(--accent,#7C5CFC)"></div></div></div></div>
+    <div class="card"><p class="hint" id="math-hint"></p><div class="math-problem" id="math-problem"></div><div class="math-visual" id="math-visual"></div><button class="sound-btn" onclick="speakCurrentMath()" style="margin:0.5rem auto 0;display:block">&#128266;</button><div id="math-feedback" class="correct-msg" style="display:none"></div></div>
     <div class="math-options" id="math-options"></div>
   </div>
 </div>
@@ -210,7 +213,7 @@ var CONTENT={
   },
   6:{
     letters:"ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ".split(""),
-    words:[{word:"BLOMMA",hint:"\u{1F33A}"},{word:"FJÄRIL",hint:"\u{1F98B}"},{word:"KANIN",hint:"\u{1F430}"},{word:"STJÄRNA",hint:"\u2B50"},{word:"REGNBÅGE",hint:"\u{1F308}"},{word:"DOCKA",hint:"\u{1FA86}"},{word:"ÄLSKA",hint:"\u2764\uFE0F"},{word:"SKOLA",hint:"\u{1F3EB}"},{word:"MÅNE",hint:"\u{1F319}"},{word:"GRODA",hint:"\u{1F438}"},{word:"SNÖGUBBE",hint:"\u26C4"},{word:"DELFIN",hint:"\u{1F42C}"},{word:"FLYGPLAN",hint:"\u2708\uFE0F"},{word:"JORDGUBBE",hint:"\u{1F353}"},{word:"DINOSAURIE",hint:"\u{1F995}"},{word:"PRINSESSA",hint:"\u{1F478}"},{word:"ENHÖRNING",hint:"\u{1F984}"},{word:"CHOKLAD",hint:"\u{1F36B}"}],
+    words:[{word:"BLOMMA",hint:"\u{1F33A}"},{word:"FJÄRIL",hint:"\u{1F98B}"},{word:"KANIN",hint:"\u{1F430}"},{word:"STJÄRNA",hint:"\u2B50"},{word:"REGNBÅGE",hint:"\u{1F308}"},{word:"DOCKA",hint:"\u{1F38E}"},{word:"HJÄRTA",hint:"\u2764\uFE0F"},{word:"SKOLA",hint:"\u{1F3EB}"},{word:"MÅNE",hint:"\u{1F319}"},{word:"GRODA",hint:"\u{1F438}"},{word:"SNÖGUBBE",hint:"\u26C4"},{word:"DELFIN",hint:"\u{1F42C}"},{word:"FLYGPLAN",hint:"\u2708\uFE0F"},{word:"JORDGUBBE",hint:"\u{1F353}"},{word:"DINOSAURIE",hint:"\u{1F995}"},{word:"PRINSESSA",hint:"\u{1F478}"},{word:"ENHÖRNING",hint:"\u{1F984}"},{word:"CHOKLAD",hint:"\u{1F36B}"}],
     sentences:[{text:"KATTEN SOVER PÅ SOFFAN",emoji:"\u{1F431}"},{text:"FJÄRILEN FLYGER ÖVER ÄNGEN",emoji:"\u{1F98B}"},{text:"VI ÅKTE TILL STRANDEN IGÅR",emoji:"\u{1F3D6}\uFE0F"},{text:"MIN KOMPIS HAR EN HAMSTER",emoji:"\u{1F439}"},{text:"REGNBÅGEN LYSER PÅ HIMLEN",emoji:"\u{1F308}"},{text:"JAG VILL LÄSA EN BOK OM DRAKAR",emoji:"\u{1F409}"},{text:"PRINSESSAN BOR I ETT SLOTT",emoji:"\u{1F3F0}"},{text:"SNÖFLINGORNA FALLER SAKTA NER",emoji:"\u2744\uFE0F"},{text:"VI BAKADE KANELBULLAR TILLSAMMANS",emoji:"\u{1F36A}"},{text:"ENHÖRNINGEN SPRINGER GENOM SKOGEN",emoji:"\u{1F984}"}],
   }
 };
@@ -218,10 +221,10 @@ var CONTENT={
 var MATH_EMOJIS=["\u{1F34E}","\u{1F31F}","\u{1F36A}","\u{1F431}","\u{1F338}","\u{1F48E}","\u{1F353}","\u{1F436}","\u{1F98B}","\u{1F388}"];
 
 var currentProfile=null,audioCtx=null;
-var letterScore=0,letterStreak=0,targetLetter="",letterLocked=false;
-var wordScore=0,wordIdx=0,wordTyped="",wordLocked=false,shuffledWords=[];
-var readScore=0,readIdx=0,readTyped="",readLocked=false,shuffledSentences=[];
-var mathScore=0,mathStreak=0,mathAnswer=0,mathLocked=false,currentMathA=0,currentMathB=0,currentMathOp="+",currentMathEmoji="\u{1F34E}";
+var letterScore=0,letterFirstTry=true,targetLetter="",letterLocked=false;
+var wordScore=0,wordFirstTry=true,wordIdx=0,wordTyped="",wordLocked=false,shuffledWords=[];
+var readScore=0,readFirstTry=true,readIdx=0,readTyped="",readLocked=false,shuffledSentences=[];
+var mathScore=0,mathFirstTry=true,mathAnswer=0,mathLocked=false,currentMathA=0,currentMathB=0,currentMathOp="+",currentMathEmoji="\u{1F34E}";
 var speechReady=false,svVoice=null;
 
 // AUDIO
@@ -242,18 +245,12 @@ function speakText(text,rate){
   if(!text||!('speechSynthesis' in window))return;
   try{
     speechSynthesis.cancel();
-    if(!speechReady){var unlock=new SpeechSynthesisUtterance('');unlock.volume=0;speechSynthesis.speak(unlock);speechReady=true;var v=speechSynthesis.getVoices();svVoice=null;for(var i=0;i<v.length;i++){if(v[i].lang&&v[i].lang.indexOf('sv')===0){svVoice=v[i];break}}}
-    var u=new SpeechSynthesisUtterance();
-    u.lang='sv-SE'; // ALLTID svenska
-    // Hitta och tvinga svensk röst
+    if(!speechReady){var unlock=new SpeechSynthesisUtterance('');unlock.volume=0;speechSynthesis.speak(unlock);speechReady=true;}
     var voices=speechSynthesis.getVoices();
-    for(var i=0;i<voices.length;i++){
-      if(voices[i].lang&&voices[i].lang.indexOf('sv')===0){
-        u.voice=voices[i];
-        break;
-      }
-    }
-    u.rate=rate||0.7;u.pitch=1.1;u.volume=1;u.text=text.toLowerCase();speechSynthesis.speak(u);
+    var sv=null;for(var i=0;i<voices.length;i++){if(voices[i].lang&&voices[i].lang.indexOf('sv')===0){sv=voices[i];break;}}
+    var spRate=rate||0.7;var spText=text.toLowerCase();
+    function doSpeak(){var u=new SpeechSynthesisUtterance();u.lang='sv-SE';if(sv)u.voice=sv;u.rate=spRate;u.pitch=1.1;u.volume=1;u.text=spText;speechSynthesis.speak(u);}
+    setTimeout(doSpeak,80);
   }catch(e){}
 }
 
@@ -280,7 +277,7 @@ function speakCurrentMath(){
   var opText='';
   if(currentMathOp==='+')opText='plus';
   else if(currentMathOp==='-')opText='minus';
-  else if(currentMathOp==='×')opText='gånger';
+  else if(currentMathOp==='\u00D7')opText='g\u00E5nger';
   var text=currentMathA+' '+opText+' '+currentMathB;
   speakText(text,0.7);
 }
@@ -289,9 +286,24 @@ function speakMathAnswer(){
   var opText='';
   if(currentMathOp==='+')opText='plus';
   else if(currentMathOp==='-')opText='minus';
-  else if(currentMathOp==='×')opText='gånger';
-  var text=currentMathA+' '+opText+' '+currentMathB+' är lika med '+mathAnswer;
+  else if(currentMathOp==='\u00D7')opText='g\u00E5nger';
+  var text=currentMathA+' '+opText+' '+currentMathB+' \u00E4r lika med '+mathAnswer;
   speakText(text,0.7);
+}
+
+// SCORE HELPERS
+function updateScore(scoreId,progressId,score){
+  var el=document.getElementById(scoreId);
+  var pr=document.getElementById(progressId);
+  if(el)el.textContent=score+' p';
+  if(pr){
+    var pos=((score%10)+10)%10; // 0-9 within current bar, handle negatives
+    var pct=Math.max(0,Math.min(100,(pos/10)*100));
+    pr.style.width=pct+'%';
+    // Color: green if score positive/zero line, red tint if we just lost a point
+    if(score<0){pr.style.background='linear-gradient(90deg,#ff6b6b,#ee5a24)'}
+    else{pr.style.background='var(--accent,#7C5CFC)'}
+  }
 }
 
 // HELPERS
@@ -327,18 +339,18 @@ function setupMenu(){
 function startGame(mode){
   var p=PROFILES[currentProfile];
   var c=CONTENT[p.age];
-  if(mode==='letters'){letterScore=0;letterStreak=0;initLetterRound()}
+  if(mode==='letters'){letterScore=0;letterFirstTry=true;initLetterRound()}
   else if(mode==='words'){
     wordScore=0;wordIdx=0;wordTyped="";
     shuffledWords=shuffle(c.words.slice());
-    initWordRound();
+    initWordRound(true);
   }
   else if(mode==='read'){
     readScore=0;readIdx=0;readTyped="";
     shuffledSentences=shuffle(c.sentences.slice());
     initReadRound();
   }
-  else if(mode==='math'){mathScore=0;mathStreak=0;initMathRound()}
+  else if(mode==='math'){mathScore=0;mathFirstTry=true;initMathRound()}
   showScreen(mode);
   document.getElementById('screen-'+mode).style.background='linear-gradient(135deg,'+p.color+'12 0%,#f8f7ff 100%)';
   createParticles('particles-'+mode,p.color);
@@ -354,10 +366,9 @@ function initLetterRound(){
   document.getElementById('target-letter').textContent=targetLetter;
   document.getElementById('target-letter').style.color=p.color;
   document.getElementById('target-letter').style.textShadow='0 4px 20px '+p.color+'33';
-  document.getElementById('letter-score').textContent=letterScore;
+  updateScore('letter-score-num','letter-progress',letterScore);
   document.getElementById('letter-feedback').style.display='none';
-  var st=document.getElementById('letter-streak');
-  if(letterStreak>=3){st.style.display='inline-block';st.textContent='\u{1F525} '+letterStreak;st.style.background='linear-gradient(135deg,'+p.color+',#FFD93D)'}else st.style.display='none';
+  letterFirstTry=true;
   var grid=document.getElementById('letter-options');grid.className='letter-grid cols-2';grid.innerHTML='';
   for(var i=0;i<options.length;i++){(function(l,idx){var btn=document.createElement('button');btn.className='letter-option';btn.textContent=l;btn.style.animation='slideUp .3s '+(idx*0.05)+'s ease-out both';btn.onclick=function(){guessLetter(l,btn)};grid.appendChild(btn)})(options[i],i)}
 }
@@ -366,29 +377,30 @@ function guessLetter(letter,btn){
   if(letterLocked)return;playClick();
   speakLetter(letter);
   if(letter===targetLetter){
-    letterLocked=true;letterScore++;letterStreak++;btn.classList.add('correct');
-    document.getElementById('letter-feedback').textContent='Rätt! \u{1F389}';document.getElementById('letter-feedback').style.display='block';
-    document.getElementById('letter-score').textContent=letterScore;
-    if(letterStreak%5===0){playStar();showConfetti('confetti-letters')}else playCorrect();
-    var st=document.getElementById('letter-streak');if(letterStreak>=3){st.style.display='inline-block';st.textContent='\u{1F525} '+letterStreak}
+    letterLocked=true;if(letterFirstTry)letterScore++;else letterScore--;btn.classList.add('correct');
+    document.getElementById('letter-feedback').textContent=letterFirstTry?'Rätt! \u{1F389}':'Nästan! \u{1F44D}';
+    document.getElementById('letter-feedback').style.display='block';
+    updateScore('letter-score-num','letter-progress',letterScore);
+    if(letterScore>0&&letterScore%10===0){playStar();showConfetti('confetti-letters')}else playCorrect();
     setTimeout(initLetterRound,1200);
   }else{
-    letterStreak=0;document.getElementById('letter-streak').style.display='none';playWrong();
+    letterFirstTry=false;playWrong();
     btn.style.background='#fee';btn.style.borderColor='#fcc';
     setTimeout(function(){btn.style.background='#fff';btn.style.borderColor='rgba(0,0,0,.06)'},500);
   }
 }
 
 // WORD GAME
-function initWordRound(){
+function initWordRound(speakNow){
   if(wordIdx>=shuffledWords.length){shuffledWords=shuffle(shuffledWords);wordIdx=0}
   var p=PROFILES[currentProfile],cur=shuffledWords[wordIdx];
-  wordTyped="";wordLocked=false;
+  wordTyped="";wordLocked=false;wordFirstTry=true;
   document.getElementById('word-image').textContent=cur.hint;
-  document.getElementById('word-score').textContent=wordScore;
+  updateScore('word-score-num','word-progress',wordScore);
   document.getElementById('word-feedback').style.display='none';
   document.getElementById('word-tap-hint').style.display=p.age===4?'block':'none';
   renderWordSlots(cur.word);buildWordKeyboard(cur.word);
+  if(speakNow)speakCurrentWord();
 }
 
 function renderWordSlots(target){
@@ -427,15 +439,15 @@ function wordKeyPress(key){
   if(target.indexOf(n)===0){
     wordTyped=n;renderWordSlots(target);
     if(wordTyped===target){
-      wordLocked=true;wordScore++;
-      document.getElementById('word-score').textContent=wordScore;
-      document.getElementById('word-feedback').textContent='Bra jobbat! \u{1F31F}';
+      wordLocked=true;if(wordFirstTry)wordScore++;else wordScore--;
+      updateScore('word-score-num','word-progress',wordScore);
+      document.getElementById('word-feedback').textContent=wordFirstTry?'Bra jobbat! \u{1F31F}':'Nästan! \u{1F44D}';
       document.getElementById('word-feedback').style.display='block';
-      if(wordScore%3===0){playStar();showConfetti('confetti-words')}else playCorrect();
-      setTimeout(speakCurrentWord,400);
-      setTimeout(function(){wordIdx++;initWordRound()},1800);
+      if(wordScore>0&&wordScore%10===0){playStar();showConfetti('confetti-words')}else playCorrect();
+      speakCurrentWord();
+      setTimeout(function(){wordIdx++;initWordRound(true)},1800);
     }
-  }else playWrong();
+  }else{wordFirstTry=false;playWrong();}
 }
 
 function wordBackspace(){
@@ -448,11 +460,11 @@ function wordBackspace(){
 function initReadRound(){
   if(readIdx>=shuffledSentences.length){shuffledSentences=shuffle(shuffledSentences);readIdx=0}
   var p=PROFILES[currentProfile],cur=shuffledSentences[readIdx];
-  readTyped="";readLocked=false;
+  readTyped="";readLocked=false;readFirstTry=true;
   document.getElementById('read-emoji').textContent=cur.emoji;
   document.getElementById('read-target').textContent=cur.text;
   document.getElementById('read-target').style.background=p.color+'08';
-  document.getElementById('read-score').textContent=readScore;
+  updateScore('read-score-num','read-progress',readScore);
   document.getElementById('read-feedback').style.display='none';
   document.getElementById('read-hint-text').textContent=p.age===4?'Skriv av meningen (mellanslag läggs till automatiskt):':'Skriv av meningen:';
   renderReadTyped(cur.text);buildReadKeyboard();
@@ -487,16 +499,16 @@ function readKeyPress(key){
   if(target.indexOf(n)===0){
     readTyped=n;renderReadTyped(target);
     if(readTyped===target){
-      readLocked=true;readScore++;
-      document.getElementById('read-score').textContent=readScore;
-      document.getElementById('read-feedback').textContent='Fantastiskt! \u{1F389}\u2728';
+      readLocked=true;if(readFirstTry)readScore++;else readScore--;
+      updateScore('read-score-num','read-progress',readScore);
+      document.getElementById('read-feedback').textContent=readFirstTry?'Fantastiskt! \u{1F389}\u2728':'Nästan! \u{1F44D}';
       document.getElementById('read-feedback').style.display='block';
       renderReadTyped(target);
-      if(readScore%2===0){playStar();showConfetti('confetti-read')}else playCorrect();
-      setTimeout(speakCurrentSentence,400);
+      if(readScore>0&&readScore%10===0){playStar();showConfetti('confetti-read')}else playCorrect();
+      speakCurrentSentence();
       setTimeout(function(){readIdx++;initReadRound()},2500);
     }
-  }else playWrong();
+  }else{readFirstTry=false;playWrong();}
 }
 
 function readBackspace(){
@@ -518,12 +530,12 @@ function initMathRound(){
     else if(op==='-'){a=5+Math.floor(Math.random()*16);b=1+Math.floor(Math.random()*a);answer=a-b}
     else{a=2+Math.floor(Math.random()*4);b=2+Math.floor(Math.random()*4);answer=a*b}}
   currentMathA=a;currentMathB=b;currentMathOp=op;mathAnswer=answer;
-  document.getElementById('math-score').textContent=mathScore;
+  updateScore('math-score-num','math-progress',mathScore);
   document.getElementById('math-feedback').style.display='none';
+  mathFirstTry=true;
   if(op==='\u00D7')document.getElementById('math-hint').textContent=a+' grupper med '+b+' stycken '+currentMathEmoji+' \u2014 hur m\u00E5nga totalt?';
   else document.getElementById('math-hint').textContent=p.age===4?'Räkna ihop!':'Vad blir det?';
-  var st=document.getElementById('math-streak');
-  if(mathStreak>=3){st.style.display='inline-block';st.textContent='\u{1F525} '+mathStreak;st.style.background='linear-gradient(135deg,'+p.color+',#FFD93D)'}else st.style.display='none';
+
   document.getElementById('math-problem').innerHTML=a+' <span class="operator">'+op+'</span> '+b+' <span class="equals">=</span> <span class="answer-box">&nbsp;</span>';
   document.getElementById('math-problem').onclick=speakCurrentMath;
 
@@ -553,16 +565,16 @@ function initMathRound(){
 function guessMath(guess,btn){
   if(mathLocked)return;playClick();var p=PROFILES[currentProfile];
   if(guess===mathAnswer){
-    mathLocked=true;mathScore++;mathStreak++;btn.classList.add('correct');
+    mathLocked=true;if(mathFirstTry)mathScore++;else mathScore--;btn.classList.add('correct');
     document.getElementById('math-problem').innerHTML=currentMathA+' <span class="operator">'+currentMathOp+'</span> '+currentMathB+' <span class="equals">=</span> <span style="color:#6BCB77;font-weight:700">'+mathAnswer+'</span>';
-    document.getElementById('math-feedback').textContent='Rätt! \u{1F389}';document.getElementById('math-feedback').style.display='block';
-    document.getElementById('math-score').textContent=mathScore;
-    if(mathStreak%5===0){playStar();showConfetti('confetti-math')}else playCorrect();
-    var st=document.getElementById('math-streak');if(mathStreak>=3){st.style.display='inline-block';st.textContent='\u{1F525} '+mathStreak}
-    setTimeout(speakMathAnswer,400);
-    setTimeout(initMathRound,1800);
+    document.getElementById('math-feedback').textContent=mathFirstTry?'Rätt! \u{1F389}':'Nästan! \u{1F44D}';
+    document.getElementById('math-feedback').style.display='block';
+    updateScore('math-score-num','math-progress',mathScore);
+    if(mathScore>0&&mathScore%10===0){playStar();showConfetti('confetti-math')}else playCorrect();
+    speakMathAnswer();
+    setTimeout(initMathRound,2000);
   }else{
-    mathStreak=0;document.getElementById('math-streak').style.display='none';playWrong();
+    mathFirstTry=false;playWrong();
     btn.classList.add('wrong-pick');setTimeout(function(){btn.classList.remove('wrong-pick')},500);
   }
 }
