@@ -250,28 +250,25 @@ function initVoices(){
   lv();speechSynthesis.onvoiceschanged=lv;setTimeout(lv,500);setTimeout(lv,1500);setTimeout(lv,3000);
 }
 
+var lastSpeakTime=0;
 function speakText(text,rate){
   if(!text||!('speechSynthesis' in window))return;
   try{
-    speechSynthesis.cancel();
-    if(!speechReady){var unlock=new SpeechSynthesisUtterance('');unlock.volume=0;speechSynthesis.speak(unlock);speechReady=true;}
+    var now=Date.now();
+    // Only cancel if last speak was >500ms ago (avoids Samsung dropping queued speech)
+    if(now-lastSpeakTime>500)speechSynthesis.cancel();
+    lastSpeakTime=now;
     var spRate=rate||0.7;var spText=text.toLowerCase();
-    function doSpeak(){
-      var voices=speechSynthesis.getVoices();
-      var sv=null;
-      // Try Swedish first, then any voice as fallback
-      for(var i=0;i<voices.length;i++){if(voices[i].lang&&voices[i].lang.indexOf('sv')===0){sv=voices[i];break;}}
-      var u=new SpeechSynthesisUtterance();
-      u.lang='sv-SE';
-      if(sv)u.voice=sv;
-      u.rate=spRate;u.pitch=1.1;u.volume=1;u.text=spText;
-      speechSynthesis.speak(u);
-    }
-    setTimeout(doSpeak,80);
+    var u=new SpeechSynthesisUtterance(spText);
+    u.lang='sv-SE';
+    u.rate=spRate;u.pitch=1.1;u.volume=1;
+    // Do NOT set u.voice — let device pick based on lang (works better on Samsung)
+    speechSynthesis.speak(u);
   }catch(e){}
 }
 
 function speakLetter(letter){
+  if(!currentProfile||PROFILES[currentProfile].age!==4)return;
   speakText(letter,0.6);
 }
 
@@ -333,7 +330,7 @@ function selectProfile(key){
   document.documentElement.style.setProperty('--accent',p.color);
   document.documentElement.style.setProperty('--accent-light',p.color+'22');
   try{getAudioCtx()}catch(e){}
-  if('speechSynthesis' in window){try{var u=new SpeechSynthesisUtterance('');u.volume=0;speechSynthesis.speak(u);speechReady=true}catch(e){}}
+  if('speechSynthesis' in window){try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance('hej');u.lang='sv-SE';u.volume=0;speechSynthesis.speak(u);speechReady=true}catch(e){}}
   showScreen('menu');
 }
 
@@ -416,7 +413,7 @@ function initWordRound(speakNow){
   document.getElementById('word-feedback').style.display='none';
   document.getElementById('word-tap-hint').style.display=p.age===4?'block':'none';
   renderWordSlots(cur.word);buildWordKeyboard(cur.word);
-  if(speakNow)speakCurrentWord();
+  if(speakNow)setTimeout(speakCurrentWord,300);
 }
 
 function renderWordSlots(target){
@@ -461,7 +458,7 @@ function wordKeyPress(key){
       document.getElementById('word-feedback').style.display='block';
       if(wordScore>0&&wordScore%10===0){playStar();showConfetti('confetti-words')}else playCorrect();
       speakCurrentWord();
-      setTimeout(function(){wordIdx++;initWordRound(true)},1800);
+      setTimeout(function(){wordIdx++;initWordRound(false);setTimeout(speakCurrentWord,400)},1800);
     }
   }else{wordFirstTry=false;playWrong();}
 }
@@ -522,7 +519,7 @@ function readKeyPress(key){
       renderReadTyped(target);
       if(readScore>0&&readScore%10===0){playStar();showConfetti('confetti-read')}else playCorrect();
       speakCurrentSentence();
-      setTimeout(function(){readIdx++;initReadRound()},2500);
+      setTimeout(function(){readIdx++;initReadRound();setTimeout(speakCurrentSentence,400)},2500);
     }
   }else{readFirstTry=false;playWrong();}
 }
