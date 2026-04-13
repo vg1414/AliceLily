@@ -4,8 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
 <meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ABC & 123">
 <meta name="theme-color" content="#2d1b69">
-<title>Läs & Skriv</title>
+<title>ABC & 123</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%231a1035'/%3E%3Cstop offset='100%25' stop-color='%237C5CFC'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23bg)'/%3E%3Ctext x='32' y='44' font-size='36' text-anchor='middle'%3E%F0%9F%93%9A%3C/text%3E%3Ctext x='46' y='22' font-size='18' text-anchor='middle'%3E%E2%9C%A8%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -543,7 +548,7 @@ button:active{transform:scale(0.9)!important;transition:transform .08s!important
   <div class="floaties" id="floaties-profile"></div>
   <div id="confetti-profiles" style="position:fixed;inset:0;pointer-events:none;z-index:100"></div>
   <div class="content">
-    <div class="profile-title">📚 Läs &amp; Skriv ✨</div>
+    <div class="profile-title">📚 ABC &amp; 123 ✨</div>
     <p class="profile-subtitle">Vem vill lära sig idag?</p>
     <div class="profile-buttons">
       <button class="profile-btn" id="btn-lily" onclick="selectProfile('lily')">
@@ -1306,6 +1311,14 @@ document.getElementById('screen-profiles').style.background=
   'linear-gradient(160deg,#1a1035 0%,#2d1b69 40%,#44208a 100%)';
 
 initVoices();
+
+// Register Service Worker for PWA offline support
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/AliceLily/sw.js')
+      .catch(err => console.warn('SW registration failed:', err));
+  });
+}
 </script>
 </body>
 </html>
