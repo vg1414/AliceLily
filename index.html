@@ -808,16 +808,17 @@ function initVoices(){
 }
 
 var lastSpeakTime=0;
-function speakText(text,rate){
-  if(!text||!('speechSynthesis' in window))return;
+function speakText(text,rate,onDone){
+  if(!text||!('speechSynthesis' in window)){if(onDone)onDone();return;}
   try{
     var now=Date.now();
     if(now-lastSpeakTime>500)speechSynthesis.cancel();
     lastSpeakTime=now;
     var u=new SpeechSynthesisUtterance(text.toLowerCase());
     u.lang='sv-SE';u.rate=rate||0.7;u.pitch=1.1;u.volume=1;
+    if(onDone)u.onend=function(){setTimeout(onDone,400)};
     speechSynthesis.speak(u);
-  }catch(e){}
+  }catch(e){if(onDone)onDone();}
 }
 
 function speakLetter(letter){
@@ -1028,7 +1029,7 @@ function guessLetter(letter,btn,e){
   speakLetter(letter);
   if(letter===targetLetter){
     letterLocked=true;
-    if(letterFirstTry)letterScore++;else letterScore--;
+    if(letterFirstTry)letterScore++;
     btn.classList.add('correct');
     var fbEl=document.getElementById('letter-feedback');
     var msgs=letterFirstTry?['Rätt! 🎉','Super! 🌟','Bra jobbat! 🏆','Jättebra! 🥳','Fantastiskt! ✨']:['Nästan! 👍','Försök igen! 💪'];
@@ -1119,7 +1120,7 @@ function wordKeyPress(key,e){
     wordTyped=n;renderWordSlots(target);
     if(wordTyped===target){
       wordLocked=true;
-      if(wordFirstTry)wordScore++;else wordScore--;
+      if(wordFirstTry)wordScore++;
       renderStars('word-stars','word-score-num',wordScore);
       var fbEl=document.getElementById('word-feedback');
       var msgs=wordFirstTry?['Bra jobbat! 🌟','Jättebra! 🎉','Super! 🏆','Fantastiskt! ✨','Perfekt! 🥳']:['Nästan! 👍'];
@@ -1129,8 +1130,7 @@ function wordKeyPress(key,e){
       if(e)showStarBurst(e.clientX,e.clientY);
       if(wordScore>0&&wordScore%10===0){playStar();showConfetti('confetti-words',true);scoreFloatUp('🌟 10 poäng! 🌟','#FFD93D')}
       else{playCorrect();if(wordFirstTry)showConfetti('confetti-words',false)}
-      speakCurrentWord();
-      setTimeout(function(){wordIdx++;initWordRound(false);setTimeout(speakCurrentWord,400)},1900);
+      speakText(shuffledWords[wordIdx].word,0.6,function(){wordIdx++;initWordRound(false);setTimeout(speakCurrentWord,400)});
     }
   }else{wordFirstTry=false;playWrong();}
 }
@@ -1193,7 +1193,7 @@ function readKeyPress(key,e){
     readTyped=n;renderReadTyped(target);
     if(readTyped===target){
       readLocked=true;
-      if(readFirstTry)readScore++;else readScore--;
+      if(readFirstTry)readScore++;
       renderStars('read-stars','read-score-num',readScore);
       var fbEl=document.getElementById('read-feedback');
       var msgs=readFirstTry?['Fantastiskt! 🎉✨','Jättebra! 🌟','Super läst! 🏆','Wow, perfekt! 🥳','Bra jobbat! 🎊']:['Nästan! 👍'];
@@ -1204,8 +1204,7 @@ function readKeyPress(key,e){
       if(e)showStarBurst(e.clientX,e.clientY);
       if(readScore>0&&readScore%10===0){playStar();showConfetti('confetti-read',true);scoreFloatUp('🌟 10 poäng! 🌟','#FFD93D')}
       else{playCorrect();if(readFirstTry)showConfetti('confetti-read',false)}
-      speakCurrentSentence();
-      setTimeout(function(){readIdx++;initReadRound();setTimeout(speakCurrentSentence,400)},2600);
+      speakText(shuffledSentences[readIdx].text,0.7,function(){readIdx++;initReadRound();setTimeout(speakCurrentSentence,400)});
     }
   }else{readFirstTry=false;playWrong();}
 }
@@ -1282,7 +1281,7 @@ function guessMath(guess,btn,e){
   if(mathLocked)return;playClick();
   if(guess===mathAnswer){
     mathLocked=true;
-    if(mathFirstTry)mathScore++;else mathScore--;
+    if(mathFirstTry)mathScore++;
     btn.classList.add('correct');
     document.getElementById('math-problem').innerHTML=currentMathA+' <span class="operator">'+currentMathOp+'</span> '+currentMathB+' <span class="equals">=</span> <span style="color:#6BCB77;font-weight:700">'+mathAnswer+'</span>';
     var fbEl=document.getElementById('math-feedback');
@@ -1294,8 +1293,8 @@ function guessMath(guess,btn,e){
     if(e)showStarBurst(e.clientX,e.clientY);
     if(mathScore>0&&mathScore%10===0){playStar();showConfetti('confetti-math',true);scoreFloatUp('🌟 10 poäng! 🌟','#FFD93D')}
     else{playCorrect();if(mathFirstTry)showConfetti('confetti-math',false)}
-    speakMathAnswer();
-    setTimeout(initMathRound,2100);
+    var mathT={'+':"plus",'-':"minus",'×':"gånger"}[currentMathOp]||"plus";
+    speakText(currentMathA+' '+mathT+' '+currentMathB+' är lika med '+mathAnswer,0.7,function(){initMathRound();});
   }else{
     mathFirstTry=false;playWrong();
     btn.classList.add('wrong-pick');
