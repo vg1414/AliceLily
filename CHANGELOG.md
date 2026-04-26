@@ -1,6 +1,9 @@
 # Ändringslogg
 
 ## 2026-04-26
+- Ändrade orientering i manifest.json från portrait till landscape — appen körs nu i landscape-läge på tablets
+
+
 - Lade till app-ikon (icon-192.png och icon-512.png) i icons/-mappen
 - Fixade bugg: appen väntade inte tills rösten läst klart ord/mening/tal innan nästa uppgift startade — löst med onend-event istället för fast timeout
 
