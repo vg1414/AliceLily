@@ -65,11 +65,39 @@ button.toy:active{transform:translateY(var(--lift));box-shadow:0 0 0 var(--ink)}
 /* ============ STADEN I BAKGRUNDEN ============ */
 #scene{position:fixed;inset:0;overflow:hidden;z-index:0}
 #scene.quake{animation:shake .5s ease}
+/* sol ⇄ måne: båda bilderna ligger på samma plats, den ena tonas bort och den andra snurrar fram */
 #sun{position:absolute;right:5vw;top:4vh;width:18vh;height:18vh;cursor:pointer}
-#sun svg{width:100%;height:100%;overflow:visible}
+#sun svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;transition:transform .9s var(--pop),opacity .5s}
 #sun .rays{animation:spin 30s linear infinite;transform-box:fill-box;transform-origin:center}
-#sun.whee .rays{animation:spin .6s linear 3}
-.cloud{position:absolute;width:22vh;height:11vh;left:0;animation:drift linear infinite;opacity:.95}
+#sun .moonpic{opacity:0;transform:scale(.2) rotate(-120deg)}
+body.night #sun .sunpic{opacity:0;transform:scale(.2) rotate(180deg)}
+body.night #sun .moonpic{opacity:1;transform:none}
+.zz{animation:zz 3s ease-in-out infinite;opacity:0}
+.zz.z2{animation-delay:-1.5s}
+@keyframes zz{0%{transform:translate(0,0);opacity:0}30%{opacity:1}100%{transform:translate(14px,-26px);opacity:0}}
+/* natthimmel: ett mörkt lager som tonas in ovanpå den ljusa himlen, med blinkande stjärnor */
+#nightsky{position:absolute;inset:0;background:linear-gradient(180deg,#0b1030 0%,#1b2656 55%,#33407a 80%);opacity:0;transition:opacity 1.4s}
+body.night #nightsky{opacity:1}
+.star{position:absolute;background:#fff6c8;clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%);animation:twinkle 2.4s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.6)}}
+#city .dim,#sidewalk,#road,.cloud svg{transition:filter 1.4s}
+body.night #city .dim{filter:brightness(.5) saturate(.8)}
+body.night #sidewalk,body.night #road{filter:brightness(.6)}
+body.night .cloud svg{filter:brightness(.6) saturate(.7)}
+#city .win{transition:fill 1s}
+body.night #city .win{fill:#ffe066}
+body.night #city .win.off{fill:#2b3563}
+.cloud{position:absolute;width:22vh;height:11vh;left:0;animation:drift linear infinite;opacity:.95;cursor:pointer}
+/* regnmoln: blir grått, får ledset ansikte och skakar lite */
+.cloud svg .puff{transition:fill .4s,stroke .4s}
+.cloud.raining svg .puff{fill:#9fb0c6;stroke:#7a8ba3}
+.cloud.raining svg{animation:shiver .25s linear infinite}
+@keyframes shiver{0%,100%{transform:translate(0,0)}25%{transform:translate(-2px,1px)}75%{transform:translate(2px,-1px)}}
+.cloud .c-sad{opacity:0}.cloud.raining .c-sad{opacity:1}.cloud.raining .c-happy{opacity:0}
+#rain{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.drop{position:absolute;left:0;top:0;width:1vh;height:1.8vh;background:#4fa8ff;border:2px solid #2a6fc9;border-radius:50% 50% 50% 50%/65% 65% 35% 35%;will-change:transform}
+.splash{position:absolute;left:0;top:0;width:3vh;height:1vh;margin-left:-1.5vh;border:2px solid #4fa8ff;border-radius:50%;pointer-events:none}
+#flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
 @keyframes drift{from{transform:translateX(-30vh)}to{transform:translateX(calc(100vw + 30vh))}}
 #city{position:absolute;left:0;bottom:14.5vh;width:100%;height:52vh;overflow:visible}
 #city .tap{cursor:pointer}
@@ -278,15 +306,18 @@ body.in-game .made-by{display:none}
 
 <!-- ======== STADEN ======== -->
 <div id="scene">
+  <div id="nightsky"></div>
   <div id="sun"></div>
   <div id="clouds"></div>
   <svg id="city" viewBox="0 0 1600 500" preserveAspectRatio="xMidYMax slice"></svg>
   <div id="sky"></div>
+  <div id="rain"></div>
   <div id="sidewalk"></div>
   <div id="road"></div>
   <div id="traffic"></div>
   <div id="robot"></div>
   <div class="bubble" id="bubble"></div>
+  <div id="flash"></div>
 </div>
 
 <div id="ui">
@@ -574,11 +605,27 @@ function robotFull(){
 }
 function sunSVG(){
   var r='';for(var i=0;i<12;i++){var a=i*Math.PI/6;r+='<path d="M'+(60+Math.cos(a)*44).toFixed(1)+','+(60+Math.sin(a)*44).toFixed(1)+' L'+(60+Math.cos(a)*58).toFixed(1)+','+(60+Math.sin(a)*58).toFixed(1)+'" stroke="#ffb400" stroke-width="8" stroke-linecap="round"/>'}
-  return '<svg viewBox="0 0 120 120"><g class="rays">'+r+'</g><circle cx="60" cy="60" r="36" fill="#ffd23f" '+S+'/>'+
+  return '<svg class="sunpic" viewBox="0 0 120 120"><g class="rays">'+r+'</g><circle cx="60" cy="60" r="36" fill="#ffd23f" '+S+'/>'+
     '<circle cx="48" cy="54" r="4" fill="'+INK+'"/><circle cx="72" cy="54" r="4" fill="'+INK+'"/><path d="M46,68 q14,12 28,0" stroke="'+INK+'" stroke-width="4" fill="none" stroke-linecap="round"/>'+
     '<circle cx="40" cy="66" r="5" fill="#ff8a3d" opacity=".5"/><circle cx="80" cy="66" r="5" fill="#ff8a3d" opacity=".5"/></svg>';
 }
-function cloudSVG(){return '<svg viewBox="0 0 200 100" width="100%" height="100%"><path d="M40,86 C14,86 8,62 26,54 C24,32 50,22 66,34 C74,12 112,8 124,32 C140,20 170,30 166,54 C190,58 190,86 164,86Z" fill="#fff" stroke="#b9d9ef" stroke-width="5"/></svg>'}
+// sovande måne med nattmössa och "z z" som svävar upp
+function moonSVG(){
+  return '<svg class="moonpic" viewBox="0 0 120 120"><circle cx="60" cy="62" r="38" fill="#fff1b0" '+S+'/>'+
+    '<circle cx="42" cy="80" r="6" fill="#f0dc86"/><circle cx="80" cy="46" r="4.5" fill="#f0dc86"/><circle cx="84" cy="82" r="3.5" fill="#f0dc86"/>'+
+    '<path d="M42,60 q6,6 12,0 M66,60 q6,6 12,0" stroke="'+INK+'" stroke-width="4" fill="none" stroke-linecap="round"/>'+
+    '<path d="M54,74 q6,5 12,0" stroke="'+INK+'" stroke-width="4" fill="none" stroke-linecap="round"/>'+
+    '<circle cx="38" cy="70" r="5" fill="#ffb3c7" opacity=".6"/><circle cx="82" cy="70" r="5" fill="#ffb3c7" opacity=".6"/>'+
+    '<path d="M28,40 Q40,4 86,18 Q66,26 58,30 Z" fill="#3b82ff" '+S+'/><circle cx="90" cy="18" r="8" fill="#fff" '+S.replace('5"','4"')+'/>'+
+    '<text class="zz" x="98" y="54" font-family="Lilita One,sans-serif" font-size="18" fill="#fff" stroke="'+INK+'" stroke-width="1.5">z</text>'+
+    '<text class="zz z2" x="104" y="40" font-family="Lilita One,sans-serif" font-size="13" fill="#fff" stroke="'+INK+'" stroke-width="1.2">z</text></svg>';
+}
+function cloudSVG(){
+  return '<svg viewBox="0 0 200 100" width="100%" height="100%"><path class="puff" d="M40,86 C14,86 8,62 26,54 C24,32 50,22 66,34 C74,12 112,8 124,32 C140,20 170,30 166,54 C190,58 190,86 164,86Z" fill="#fff" stroke="#b9d9ef" stroke-width="5"/>'+
+    '<g class="c-happy"><circle cx="84" cy="58" r="4.5" fill="'+INK+'"/><circle cx="116" cy="58" r="4.5" fill="'+INK+'"/><path d="M92,68 q8,7 16,0" stroke="'+INK+'" stroke-width="3.5" fill="none" stroke-linecap="round"/></g>'+
+    '<g class="c-sad" stroke="'+INK+'" stroke-width="3.5" fill="none" stroke-linecap="round"><path d="M78,56 l10,4 M122,56 l-10,4"/><path d="M92,74 q8,-7 16,0"/></g>'+
+    '<circle cx="72" cy="68" r="5" fill="#ff9ec0" opacity=".5"/><circle cx="128" cy="68" r="5" fill="#ff9ec0" opacity=".5"/></svg>';
+}
 
 // ---- fordon (alla vända åt höger, viewBox 240×120) ----
 var CARS={
@@ -667,7 +714,8 @@ function heliSVG(){
 
 // ===================== STADEN =====================
 function buildCity(){
-  var h='';
+  // h = allt som mörknar på natten, wins = fönstren (de tänds på natten)
+  var h='',wins='';
   // berg och vulkan längst bak
   h+='<path d="M-200,500 L140,250 L330,380 L520,210 L760,500Z" fill="#9bc7e8" stroke="#7fb0d6" stroke-width="5" stroke-linejoin="round"/>';
   h+='<g id="volcano" class="tap"><path d="M860,500 L1020,190 L1090,190 L1260,500Z" fill="#b5836a" '+S+'/>'+
@@ -693,7 +741,7 @@ function buildCity(){
     h+='<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+(hh+10)+'" rx="8" fill="'+b[3]+'" '+S+'/>';
     h+='<rect x="'+(x+6)+'" y="'+(y+6)+'" width="'+(w-12)+'" height="10" rx="4" fill="#fff" opacity=".35"/>';
     for(var yy=y+26;yy<490;yy+=44)for(var xx=x+18;xx+22<x+w-10;xx+=36)
-      h+='<rect x="'+xx+'" y="'+yy+'" width="22" height="26" rx="4" fill="'+(Math.random()<.3?'#fff6c8':'#bfe9ff')+'" stroke="'+INK+'" stroke-width="3.5"/>';
+      wins+='<rect class="win'+(Math.random()<.3?' off':'')+'" x="'+xx+'" y="'+yy+'" width="22" height="26" rx="4" fill="'+(Math.random()<.3?'#fff6c8':'#bfe9ff')+'" stroke="'+INK+'" stroke-width="3.5"/>';
   });
   // polisstationen i mitten
   var px=500,pw=340,py=250;
@@ -704,8 +752,8 @@ function buildCity(){
      '<path d="M'+(px+120)+','+(py+100)+' h100 v160 h-100z" fill="#c7d3e0" '+S+'/>'+
      '<path d="M'+(px+120)+','+(py+130)+' h100 M'+(px+120)+','+(py+160)+' h100 M'+(px+120)+','+(py+190)+' h100 M'+(px+120)+','+(py+220)+' h100" stroke="'+INK+'" stroke-width="3.5"/>'+
      '<path d="M'+(px+16)+','+(py+16)+' h'+(pw-32)+' v14 h-'+(pw-32)+'z" fill="#3b82ff"/>';
-  [[px+30,py+60],[px+250,py+60],[px+30,py+150],[px+250,py+150]].forEach(function(p){h+='<rect x="'+p[0]+'" y="'+p[1]+'" width="60" height="54" rx="6" fill="#bfe9ff" stroke="'+INK+'" stroke-width="4"/><path d="M'+(p[0]+30)+','+p[1]+' v54" stroke="'+INK+'" stroke-width="3.5"/>'});
-  document.getElementById('city').innerHTML=h;
+  [[px+30,py+60],[px+250,py+60],[px+30,py+150],[px+250,py+150]].forEach(function(p){wins+='<rect class="win" x="'+p[0]+'" y="'+p[1]+'" width="60" height="54" rx="6" fill="#bfe9ff" stroke="'+INK+'" stroke-width="4"/><path d="M'+(p[0]+30)+','+p[1]+' v54" stroke="'+INK+'" stroke-width="3.5"/>'});
+  document.getElementById('city').innerHTML='<g class="dim">'+h+'</g><g>'+wins+'</g>';
 
   document.getElementById('bronto').addEventListener('pointerdown',function(){
     var b=this;restartAnim(b,'roar');roar(1.6);setTimeout(function(){b.classList.remove('roar')},1150);
@@ -717,10 +765,13 @@ function buildCity(){
   });
 }
 function buildScene(){
-  document.getElementById('sun').innerHTML=sunSVG();
-  document.getElementById('sun').addEventListener('pointerdown',function(){var s=this;restartAnim(s,'whee');ding();setTimeout(function(){s.classList.remove('whee')},1900)});
+  document.getElementById('sun').innerHTML=sunSVG()+moonSVG();
+  document.getElementById('sun').addEventListener('pointerdown',toggleNight);
+  var st='';for(var i=0;i<45;i++){var z=(.8+Math.random()*1.6).toFixed(2);st+='<div class="star" style="left:'+(Math.random()*100).toFixed(1)+'vw;top:'+(Math.random()*55).toFixed(1)+'vh;width:'+z+'vh;height:'+z+'vh;animation-delay:-'+(Math.random()*2.4).toFixed(2)+'s"></div>'}
+  document.getElementById('nightsky').innerHTML=st;
   var cl='';[[8,70,-10],[22,95,-55],[5,120,-90]].forEach(function(c){cl+='<div class="cloud" style="top:'+c[0]+'vh;animation-duration:'+c[1]+'s;animation-delay:'+c[2]+'s">'+cloudSVG()+'</div>'});
   document.getElementById('clouds').innerHTML=cl;
+  document.querySelectorAll('.cloud').forEach(function(c){c.addEventListener('pointerdown',function(){makeItRain(c)})});
   buildCity();
   var rb=document.getElementById('robot');rb.innerHTML=robotFull();
   rb.addEventListener('pointerdown',function(){robotSay(pick(ROBO_LINES))});
@@ -734,6 +785,59 @@ function robotSay(text){
   bu.textContent=text;bu.classList.add('show');
   clearTimeout(rb._t);rb._t=setTimeout(function(){rb.classList.remove('happy','wave');bu.classList.remove('show')},2400);
   setTimeout(function(){speakText(text,0.95,null,0.3)},450);
+}
+
+// ===================== DAG & NATT =====================
+// Tryck på solen: klassen "night" sätts på <body>. CSS:en tonar då in natthimlen,
+// byter solen mot månen, gör husen mörkare och tänder fönstren.
+function toggleNight(){
+  var n=document.body.classList.toggle('night');
+  if(n)playNotes([[784,.35],[659,.35],[523,.35],[392,.6]],'sine',.12,.22);   // vaggvisa nedåt
+  else playNotes([[523,.2],[659,.2],[784,.2],[1047,.5]],'triangle',.14,.12); // pigg melodi uppåt
+  document.querySelector('meta[name=theme-color]').setAttribute('content',n?'#0b1030':'#56c3ff');
+}
+
+// ===================== REGN =====================
+// Tryck på ett moln: molnet blir grått och ledset, och i ca 2,6 sekunder skapas nya regndroppar
+// var 70:e millisekund under molnet. Varje droppe faller ner till trottoaren och blir ett litet plask.
+function makeItRain(cloud){
+  if(cloud._raining)return;
+  cloud._raining=true;cloud.classList.add('raining');rainSound(2.8);
+  if(Math.random()<.35)setTimeout(thunder,500);
+  var end=Date.now()+2600,box=document.getElementById('rain');
+  (function drip(){
+    var r=cloud.getBoundingClientRect();
+    for(var i=0;i<2;i++)dropFrom(box,r.left+r.width*(.2+Math.random()*.6),r.top+r.height*.8);
+    if(Date.now()<end)setTimeout(drip,70);
+    else{cloud.classList.remove('raining');cloud._raining=false}
+  })();
+}
+function dropFrom(box,x,y){
+  var d=document.createElement('div'),ground=innerHeight*.85-Math.random()*innerHeight*.02;
+  d.className='drop';box.appendChild(d);
+  var dist=ground-y,a=d.animate([{transform:'translate('+x+'px,'+y+'px)'},{transform:'translate('+(x-dist*.08)+'px,'+ground+'px)'}],
+    {duration:dist*1.6,easing:'cubic-bezier(.5,0,1,1)'});
+  a.onfinish=function(){
+    d.remove();
+    if(Math.random()<.5){var s=document.createElement('div');s.className='splash';box.appendChild(s);
+      var b=s.animate([{transform:'translate('+(x-dist*.08)+'px,'+ground+'px) scale(.3)',opacity:1},{transform:'translate('+(x-dist*.08)+'px,'+ground+'px) scale(1.4)',opacity:0}],{duration:400});
+      b.onfinish=function(){s.remove()}}
+  };
+}
+// regnljud: brus genom ett bandpassfilter (sssh) + små slumpade "plipp"
+function rainSound(dur){
+  try{var c=getAudioCtx(),t=c.currentTime,s=noise(c,dur),f=c.createBiquadFilter(),g=c.createGain();
+    f.type='bandpass';f.frequency.value=2500;f.Q.value=.6;s.connect(f);f.connect(g);g.connect(c.destination);
+    g.gain.setValueAtTime(.001,t);g.gain.exponentialRampToValueAtTime(.1,t+.3);g.gain.setValueAtTime(.1,t+dur-.5);g.gain.exponentialRampToValueAtTime(.001,t+dur);s.start(t);
+    for(var i=0;i<14;i++){var o=c.createOscillator(),g2=c.createGain(),tt=t+Math.random()*(dur-.3);
+      o.type='sine';o.frequency.setValueAtTime(1400+Math.random()*1200,tt);o.frequency.exponentialRampToValueAtTime(700,tt+.05);
+      o.connect(g2);g2.connect(c.destination);g2.gain.setValueAtTime(.05,tt);g2.gain.exponentialRampToValueAtTime(.001,tt+.07);o.start(tt);o.stop(tt+.08)}
+  }catch(e){}
+}
+// blixt (vit blinkning över staden) + åskmuller + skakning
+function thunder(){
+  document.getElementById('flash').animate([{opacity:0},{opacity:.85,offset:.1},{opacity:0,offset:.3},{opacity:.6,offset:.45},{opacity:0}],{duration:600});
+  setTimeout(function(){rumble();restartAnim(document.getElementById('scene'),'quake')},250);
 }
 
 // ===================== TRAFIK =====================

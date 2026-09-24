@@ -11,7 +11,7 @@ Välj tema längst ner på förstasidan. Valet sparas på enheten (i webbläsare
 - **Klassisk** (`index.html`) – natthimmel med norrsken, stjärnor och glaskort
 - **Papper** (`paper.html`) – papperscollage-diorama med djupeffekt, dag/natt-läge och saker att trycka på i landskapet
 - **Squishy** (`clay.html`) – mjuka lekdegsknappar och lerfigurer med ansikten
-- **Turbo** (`turbo.html`) – tecknad leksaksstad med roboten Robbo, polisbilar, racerbilar, brandbil, monstertruck, helikopter, T-rex, brontosaurus och vulkan. Allt går att trycka på (siren, tuta, vrål, vulkanutbrott). Poängen är ett batteri som laddas och vid rätt svar susar ett fordon förbi
+- **Turbo** (`turbo.html`) – tecknad leksaksstad med roboten Robbo, polisbilar, racerbilar, brandbil, monstertruck, helikopter, T-rex, brontosaurus och vulkan. Allt går att trycka på (siren, tuta, vrål, vulkanutbrott). Molnen regnar (ibland med blixt och åska) och solen blir en sovande måne så att staden får natt med stjärnor och tända fönster. Poängen är ett batteri som laddas och vid rätt svar susar ett fordon förbi
 
 ## Funktioner
 

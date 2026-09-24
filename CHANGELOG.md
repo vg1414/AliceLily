@@ -1,6 +1,8 @@
 # Ändringslogg
 
 ## 2026-09-24
+- Turbo: tryck på ett moln så blir det grått och ledset och det regnar ner på gatan med plask och regnljud (ibland blixt och åska). Molnen har fått ansikten
+- Turbo: tryck på solen så blir den en sovande måne och det blir natt – mörk himmel med blinkande stjärnor, mörkare hus och tända fönster. Tryck på månen för att få dag igen
 - Papper: på smala skärmar lyfts temaväljaren upp så att Natt-knappen inte hamnar över Turbo-knappen
 - Ny profil **Bo** (5 år, blå med 🦖) i alla fyra teman. Bo får samma nivå som Lily. Födelsedagen i `content.js` är ungefärlig tills rätt datum läggs in
 - Profilkorten har gjorts lite smalare så att tre kort får plats bredvid varandra
