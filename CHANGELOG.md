@@ -1,6 +1,7 @@
 # Ändringslogg
 
 ## 2026-09-24
+- Papper: på smala skärmar lyfts temaväljaren upp så att Natt-knappen inte hamnar över Turbo-knappen
 - Ny profil **Bo** (5 år, blå med 🦖) i alla fyra teman. Bo får samma nivå som Lily. Födelsedagen i `content.js` är ungefärlig tills rätt datum läggs in
 - Profilkorten har gjorts lite smalare så att tre kort får plats bredvid varandra
 - Nytt tema **Turbo** (`turbo.html`) – en tecknad leksaksstad med bilar, polis, robotar och dinosaurier: roboten Robbo som vinkar och pratar med robotröst, fordon som kör förbi på gatan (polisbil med blåljus, racerbil, brandbil, dumper, monstertruck), polishelikopter, T-rex som promenerar förbi, brontosaurus bakom husen och en vulkan som får utbrott. Poängen är ett batteri som laddas, vid rätt svar susar ett fordon förbi och vid 10 poäng springer T-rexen över skärmen. Alla ljud skapas med Web Audio

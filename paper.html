@@ -305,6 +305,8 @@ body.in-game .made-by{display:none}
 .tp{padding:.4em .9em;border-radius:99px;font-weight:800;font-size:clamp(.85rem,2vh,1rem);background:#fff;box-shadow:0 3px 0 var(--paper-edge)}
 .tp.on{background:#ff5f9e;color:#fff;box-shadow:0 3px 0 #d9407f}
 .tp:active{transform:translateY(2px)}
+/* smal skärm: lyft temaväljaren ovanför Natt-knappen så att de inte krockar */
+@media (max-width:760px){.theme-picker{margin-bottom:clamp(48px,7vh,64px)}}
 
 /* stående läge */
 @media (orientation:portrait){
