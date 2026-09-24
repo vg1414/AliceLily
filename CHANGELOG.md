@@ -1,6 +1,7 @@
 # Ändringslogg
 
 ## 2026-09-24
+- Ny funktion "Dölj texten" i meningsspelet (nivå 6): meningen byts mot streck och man skriver efter det rösten läser upp (diktamen). Valet sparas per barn och meningen visas när den är rätt skriven
 - Nytt tema **Papper** (`paper.html`) – papperscollage-diorama med regnbåge, slott, kanin och ballonger, djupeffekt när man lutar plattan, dag/natt-läge och saker att trycka på
 - Nytt tema **Lera** (`clay.html`) – mjuka "lekdegs"-knappar som trycks ihop, lerfigurer med ansikten och tuggummikulor som poäng
 - Temaväljare (Klassisk / Papper / Lera) på förstasidan – valet sparas och appen öppnar samma tema nästa gång

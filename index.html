@@ -177,6 +177,9 @@ body.in-game .made-by{display:none}
   border:3px dashed #e0d8fa;text-align:left;transition:all .3s}
 .typed-display.has-text{border-style:solid;border-color:var(--accent)}
 .typed-display.correct-border{border:3px solid var(--good);color:var(--good-dark);background:#e9fff3}
+.toggle-chip{margin-top:.7em;padding:.45em 1em;border-radius:99px;background:#f2eeff;color:var(--ink);font-weight:900;font-size:clamp(.78rem,1.9vh,.92rem);box-shadow:0 3px 0 #d9d0f5;transition:transform .15s}
+.toggle-chip:active{transform:translateY(3px)}
+.sentence-display.hidden-text{color:var(--ink-soft);letter-spacing:.14em;white-space:pre-wrap}
 .cursor{animation:blink 1s steps(1) infinite}
 @keyframes blink{50%{opacity:0}}
 
@@ -307,6 +310,7 @@ body.in-game .made-by{display:none}
         <div class="pic">
           <button class="pic-orb" onclick="speakCurrentSentence()"><span class="word-image" id="read-emoji"></span></button>
           <div class="tap-hint">👆 lyssna</div>
+          <button class="toggle-chip" id="read-toggle" onclick="toggleHideSentence()" style="display:none">🙈 Dölj texten</button>
         </div>
         <div class="main">
           <p class="hint" id="read-hint-text">✏️ Skriv av meningen:</p>
@@ -589,10 +593,9 @@ function initReadRound(){
   if(readIdx>=shuffledSentences.length){shuffledSentences=shuffle(shuffledSentences);readIdx=0}
   var cur=shuffledSentences[readIdx];readTyped="";readLocked=false;readFirstTry=true;
   document.getElementById('read-emoji').textContent=cur.emoji;
-  document.getElementById('read-target').textContent=cur.text;
+  renderReadTarget();
   renderStars('read-stars','read-score-num',readScore);
   document.getElementById('read-feedback').style.display='none';
-  document.getElementById('read-hint-text').textContent=level()===5?'✏️ Skriv av meningen (mellanslag kommer av sig själv):':'✏️ Skriv av meningen:';
   renderReadTyped();buildReadKeyboard();
   setTimeout(speakCurrentSentence,350);
 }
@@ -619,7 +622,7 @@ function readKeyPress(key,e,btn){
   if(target.indexOf(n)===0){
     readTyped=n;renderReadTyped();
     if(readTyped===target){
-      readLocked=true;if(readFirstTry)readScore++;
+      readLocked=true;renderReadTarget();if(readFirstTry)readScore++;
       renderStars('read-stars','read-score-num',readScore);renderReadTyped();
       celebrate(readScore,readFirstTry,e,'read-feedback',['Fantastiskt! 🎉','Jättebra! 🌟','Super skrivet! 🏆','Wow, perfekt! 🥳','Bra jobbat! 🎊'],['Nu blev det rätt! 👍'],'card-read');
       speakText(target,0.7,function(){readIdx++;initReadRound()});
@@ -669,6 +672,28 @@ function guessMath(guess,btn,e){
     celebrate(mathScore,mathFirstTry,e,'math-feedback',['Rätt! 🎉','Supermatematiker! 🌟','Bra räknat! 🏆','Fantastiskt! ✨','Perfekt! 🥳'],['Nu blev det rätt! 👍'],'card-math');
     speakText(mathTask.sayAnswer,0.7,initMathRound);
   }else{mathFirstTry=false;playWrong();markWrong(btn)}
+}
+
+var HINT_PREFIX='✏️ ';
+// ===================== DÖLJ MENINGEN (diktamen) =====================
+// Nivå 6 kan välja att dölja meningen och skriva efter det rösten läser upp.
+// Valet sparas per barn i webbläsaren.
+function hideKey(){return 'abcHideSentence_'+currentProfile}
+function sentenceHidden(){try{return level()>=6&&localStorage.getItem(hideKey())==='1'}catch(e){return false}}
+function renderReadTarget(){
+  var cur=shuffledSentences[readIdx],el=document.getElementById('read-target'),btn=document.getElementById('read-toggle');
+  var hidden=sentenceHidden()&&!readLocked;
+  // dold mening visas som streck – ett per bokstav – så man ser hur långa orden är
+  el.textContent=hidden?cur.text.split(' ').map(function(w){return w.replace(/./g,'_')}).join('   '):cur.text;
+  el.classList.toggle('hidden-text',hidden);
+  btn.style.display=level()>=6?'':'none';
+  btn.textContent=sentenceHidden()?'👁️ Visa texten':'🙈 Dölj texten';
+  document.getElementById('read-hint-text').textContent=HINT_PREFIX+(level()===5?'Skriv av meningen (mellanslag kommer av sig själv):':(hidden?'Lyssna och skriv meningen:':'Skriv av meningen:'));
+}
+function toggleHideSentence(){
+  try{localStorage.setItem(hideKey(),sentenceHidden()?'0':'1')}catch(e){}
+  renderReadTarget();
+  if(sentenceHidden())speakCurrentSentence();
 }
 
 // ===================== START =====================

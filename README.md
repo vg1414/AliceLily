@@ -17,7 +17,7 @@ Välj tema längst ner på förstasidan. Valet sparas i webbläsaren.
 - **Profilval** – Alice och Lily har egna profiler. Åldern räknas ut från födelsedagen och svårighetsnivån följer åldern automatiskt
 - **Bokstäver** – lyssna och hitta rätt bokstav (nivå 5)
 - **Skriv ord** – stava ord med bilder som ledtråd
-- **Meningar** – skriv av meningar
+- **Meningar** – skriv av meningar, eller dölj texten och skriv efter uppläsningen (diktamen, nivå 6)
 - **Matte** – plus och minus (upp till 10 eller 20), gånger och "hur många fattas?"
 - **Poängsystem** – stjärnor/poäng per spelomgång, firande vid var tionde poäng
 - **Ljud** – svensk text-till-tal för bokstäver, ord, meningar och tal
