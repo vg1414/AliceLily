@@ -36,6 +36,7 @@
 }
 body[data-profile="alice"]{--sky-top:#d9c8ff;--sky-mid:#ffd9ec;--sky-low:#bff1ea}
 body[data-profile="lily"]{--sky-top:#ffbfd8;--sky-mid:#ffe6c4;--sky-low:#cdeeff}
+body[data-profile="bo"]{--sky-top:#b9dcff;--sky-mid:#d9f5e0;--sky-low:#fff2c4}
 
 html,body{width:100%;height:100%;overflow:hidden;background:var(--frame);font-family:'Nunito',sans-serif;color:var(--ink);
   user-select:none;-webkit-user-select:none;touch-action:manipulation;overscroll-behavior:none}
@@ -139,8 +140,8 @@ body.night .firefly{opacity:1;animation:fly var(--fd,9s) ease-in-out infinite al
 .title-tag h1{font-family:'Fredoka';font-weight:700;font-size:clamp(2.4rem,8.5vh,4.6rem);line-height:1;margin:.15em 0 .1em;letter-spacing:.01em}
 .title-tag h1 .a{color:#ff5f9e}.title-tag h1 .b{color:#ffb020}.title-tag h1 .c{color:#27b3a0}
 .title-tag p{font-size:clamp(1rem,2.6vh,1.35rem);font-weight:700;color:var(--ink-soft)}
-.profile-row{display:flex;gap:clamp(30px,8vw,110px);justify-content:center;margin-top:clamp(0px,2vh,20px)}
-.profile-card{position:relative;padding:clamp(34px,5vh,44px) clamp(22px,3vw,36px) clamp(14px,2.4vh,22px);width:clamp(170px,24vw,250px);
+.profile-row{display:flex;gap:clamp(20px,4.5vw,70px);justify-content:center;margin-top:clamp(0px,2vh,20px)}
+.profile-card{position:relative;padding:clamp(34px,5vh,44px) clamp(22px,3vw,36px) clamp(14px,2.4vh,22px);width:clamp(160px,22vw,240px);
   display:flex;flex-direction:column;align-items:center;gap:.2rem}
 .profile-card:active{scale:.93}
 .profile-card .badge{width:clamp(92px,17vh,150px);height:clamp(92px,17vh,150px);position:relative;display:grid;place-items:center;transition:transform .3s}
@@ -342,7 +343,7 @@ body.in-game .made-by{display:none}
   <!-- PROFILVAL -->
   <section id="screen-profiles" class="screen active">
     <div class="tag title-tag">
-      <div class="kicker">Alice &amp; Lilys pappersdal</div>
+      <div class="kicker">Alice, Lily &amp; Bos pappersdal</div>
       <h1><span class="a">ABC</span> <span class="b">&amp;</span> <span class="c">123</span></h1>
       <p>Vem vill leka och lära idag?</p>
     </div>
@@ -357,8 +358,13 @@ body.in-game .made-by{display:none}
         <div class="name" style="color:#8a5cf6">Alice</div>
         <div class="age" id="age-alice"></div>
       </button>
+      <button class="tag profile-card" style="--sw:5s;--dl:-2.6s" onclick="selectProfile('bo')">
+        <div class="badge" id="badge-bo"><span>🦖</span></div>
+        <div class="name" style="color:#2f86e8">Bo</div>
+        <div class="age" id="age-bo"></div>
+      </button>
     </div>
-    <div class="theme-picker"><span class="tp-label">Tema:</span><button class="tp" onclick="setTheme('classic')">✨ Klassisk</button><button class="tp on" onclick="setTheme('paper')">✂️ Papper</button><button class="tp" onclick="setTheme('clay')">🧸 Lera</button></div>
+    <div class="theme-picker"><span class="tp-label">Tema:</span><button class="tp" onclick="setTheme('classic')">✨ Klassisk</button><button class="tp on" onclick="setTheme('paper')">✂️ Papper</button><button class="tp" onclick="setTheme('clay')">🧸 Squishy</button><button class="tp" onclick="setTheme('turbo')">🚓 Turbo</button></div>
   </section>
 
   <!-- MENY -->
@@ -461,7 +467,8 @@ body.in-game .made-by{display:none}
 // ===================== DATA =====================
 var PROFILES={
   lily:{name:"Lily",emoji:"🌸",color:"#ff5f9e",edge:"#d9407f"},
-  alice:{name:"Alice",emoji:"🦄",color:"#8a5cf6",edge:"#6a3fd6"}
+  alice:{name:"Alice",emoji:"🦄",color:"#8a5cf6",edge:"#6a3fd6"},
+  bo:{name:"Bo",emoji:"🦖",color:"#3b9dff",edge:"#1f74d6"}
 };
 
 var PAPER_COLORS=["#ff5f9e","#ffb020","#ffd84d","#5fcf86","#3cc3e8","#8a5cf6","#ff7a59","#27b3a0"];
@@ -1190,9 +1197,11 @@ function toggleHideSentence(){
 // ===================== START =====================
 document.getElementById('age-lily').textContent=ageLabel('lily');
 document.getElementById('age-alice').textContent=ageLabel('alice');
+document.getElementById('age-bo').textContent=ageLabel('bo');
 buildFar();buildMid();buildNear();buildFront();buildHang();wireScene();setupParallax();
 document.getElementById('badge-lily').insertAdjacentHTML('afterbegin',scallop('#ffc2da',14,38,10));
 document.getElementById('badge-alice').insertAdjacentHTML('afterbegin',scallop('#d6c6ff',14,38,10));
+document.getElementById('badge-bo').insertAdjacentHTML('afterbegin',scallop('#c2e0ff',14,38,10));
 initVoices();
 
 if('serviceWorker' in navigator){

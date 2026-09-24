@@ -1,6 +1,11 @@
 # Ändringslogg
 
 ## 2026-09-24
+- Ny profil **Bo** (5 år, blå med 🦖) i alla fyra teman. Bo får samma nivå som Lily. Födelsedagen i `content.js` är ungefärlig tills rätt datum läggs in
+- Profilkorten har gjorts lite smalare så att tre kort får plats bredvid varandra
+- Nytt tema **Turbo** (`turbo.html`) – en tecknad leksaksstad med bilar, polis, robotar och dinosaurier: roboten Robbo som vinkar och pratar med robotröst, fordon som kör förbi på gatan (polisbil med blåljus, racerbil, brandbil, dumper, monstertruck), polishelikopter, T-rex som promenerar förbi, brontosaurus bakom husen och en vulkan som får utbrott. Poängen är ett batteri som laddas, vid rätt svar susar ett fordon förbi och vid 10 poäng springer T-rexen över skärmen. Alla ljud skapas med Web Audio
+- Temaväljaren har fått knappen 🚓 Turbo i alla teman, och service workern cachar turbo.html (cache v3)
+- Bytt namn på temat Lera till **Squishy** (filen heter fortfarande `clay.html`, så sparade temaval fungerar som vanligt)
 - Ny funktion "Dölj texten" i meningsspelet (nivå 6): meningen byts mot streck och man skriver efter det rösten läser upp (diktamen). Valet sparas per barn och meningen visas när den är rätt skriven
 - Nytt tema **Papper** (`paper.html`) – papperscollage-diorama med regnbåge, slott, kanin och ballonger, djupeffekt när man lutar plattan, dag/natt-läge och saker att trycka på
 - Nytt tema **Lera** (`clay.html`) – mjuka "lekdegs"-knappar som trycks ihop, lerfigurer med ansikten och tuggummikulor som poäng

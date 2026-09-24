@@ -1,18 +1,20 @@
 // =====================================================================
-// content.js – gemensamt innehåll för alla tre teman (Klassisk, Papper, Lera)
+// content.js – gemensamt innehåll för alla teman (Klassisk, Papper, Squishy, Turbo)
 // Ändra ord, meningar, födelsedagar och svårighet HÄR så gäller det överallt.
 // =====================================================================
 
 // ---------- Temaväljare ----------
 // Sparar valt tema i webbläsaren så appen öppnar samma tema nästa gång.
-var THEMES={classic:'index.html',paper:'paper.html',clay:'clay.html'};
+var THEMES={classic:'index.html',paper:'paper.html',clay:'clay.html',turbo:'turbo.html'};
 function setTheme(t){
   try{localStorage.setItem('abcTheme',t)}catch(e){}
   if(THEMES[t]&&location.pathname.indexOf(THEMES[t])<0)location.href=THEMES[t];
 }
 
 // ---------- Födelsedagar & ålder ----------
-var BIRTHDAYS={alice:'2020-01-29',lily:'2021-09-10'};
+// OBS: Bos födelsedag är ungefärlig (samma år som Lily) – byt till rätt datum när du vet det,
+// annars hamnar födelsedagsfirandet på fel dag.
+var BIRTHDAYS={alice:'2020-01-29',lily:'2021-09-10',bo:'2021-06-15'};
 function ageOf(key){
   var b=new Date(BIRTHDAYS[key]+'T00:00:00'),n=new Date(),a=n.getFullYear()-b.getFullYear();
   if(n.getMonth()<b.getMonth()||(n.getMonth()===b.getMonth()&&n.getDate()<b.getDate()))a--;

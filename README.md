@@ -1,20 +1,21 @@
-# ABC & 123 – Alice & Lily
+# ABC & 123 – Alice, Lily & Bo
 
-En läs-, skriv- och räkneapp för barn, byggd som en PWA som körs i liggande läge på surfplattor (främst Android). Alice och Lily väljer sin profil och övar bokstäver, ord, meningar och matte via interaktiva spel.
+En läs-, skriv- och räkneapp för barn, byggd som en PWA som körs i liggande läge på surfplattor (främst Android). Alice, Lily och Bo väljer sin profil och övar bokstäver, ord, meningar och matte via interaktiva spel.
 
 **Live:** https://vg1414.github.io/AliceLily/
 
 ## Teman
 
-Välj tema längst ner på förstasidan. Valet sparas i webbläsaren.
+Välj tema längst ner på förstasidan. Valet sparas på enheten (i webbläsaren), så varje surfplatta öppnar sitt eget senast valda tema.
 
 - **Klassisk** (`index.html`) – natthimmel med norrsken, stjärnor och glaskort
 - **Papper** (`paper.html`) – papperscollage-diorama med djupeffekt, dag/natt-läge och saker att trycka på i landskapet
-- **Lera** (`clay.html`) – mjuka lekdegsknappar och lerfigurer med ansikten
+- **Squishy** (`clay.html`) – mjuka lekdegsknappar och lerfigurer med ansikten
+- **Turbo** (`turbo.html`) – tecknad leksaksstad med roboten Robbo, polisbilar, racerbilar, brandbil, monstertruck, helikopter, T-rex, brontosaurus och vulkan. Allt går att trycka på (siren, tuta, vrål, vulkanutbrott). Poängen är ett batteri som laddas och vid rätt svar susar ett fordon förbi
 
 ## Funktioner
 
-- **Profilval** – Alice och Lily har egna profiler. Åldern räknas ut från födelsedagen och svårighetsnivån följer åldern automatiskt
+- **Profilval** – Alice, Lily och Bo har egna profiler. Åldern räknas ut från födelsedagen och svårighetsnivån följer åldern automatiskt
 - **Bokstäver** – lyssna och hitta rätt bokstav (nivå 5)
 - **Skriv ord** – stava ord med bilder som ledtråd
 - **Meningar** – skriv av meningar, eller dölj texten och skriv efter uppläsningen (diktamen, nivå 6)

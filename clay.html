@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="ABC & 123">
 <meta name="theme-color" content="#f3ecff">
-<title>ABC & 123 – Lekdeg</title>
+<title>ABC & 123 – Squishy</title>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='20' fill='%23ff9fcf'/%3E%3Ccircle cx='24' cy='28' r='4' fill='%233b2a5a'/%3E%3Ccircle cx='40' cy='28' r='4' fill='%233b2a5a'/%3E%3Cpath d='M24 38 q8 8 16 0' stroke='%233b2a5a' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -33,6 +33,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Nunito',sans-serif
   user-select:none;-webkit-user-select:none;touch-action:manipulation;overscroll-behavior:none;
   background:linear-gradient(155deg,var(--bg1) 0%,var(--bg2) 50%,var(--bg3) 100%)}
 body[data-profile="alice"]{--bg1:#f0e6ff;--bg2:#e6f0ff;--bg3:#e2fff3}
+body[data-profile="bo"]{--bg1:#e2f1ff;--bg2:#e4fbf1;--bg3:#fff6dc}
 button{font-family:inherit;border:none;outline:none;cursor:pointer;touch-action:manipulation;color:inherit;background:none}
 
 /* ============ LERA ============ */
@@ -87,8 +88,8 @@ body.in-game .blob.hide-in-game{opacity:0;pointer-events:none}
 .title .row .puffy.jelly{animation:jelly .7s var(--spring)}
 @keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-10px) rotate(2deg)}}
 .title .sub{display:inline-block;margin-top:clamp(10px,2.4vh,22px);padding:.45em 1.3em;border-radius:99px;font-weight:900;font-size:clamp(1rem,2.8vh,1.35rem)}
-.profile-row{display:flex;gap:clamp(24px,6vw,80px)}
-.profile-card{--c:#fff;width:clamp(190px,26vw,270px);padding:clamp(18px,3vh,28px) 18px clamp(16px,2.6vh,24px);display:flex;flex-direction:column;align-items:center;border-radius:42px}
+.profile-row{display:flex;gap:clamp(18px,4vw,56px)}
+.profile-card{--c:#fff;width:clamp(170px,23vw,250px);padding:clamp(18px,3vh,28px) 18px clamp(16px,2.6vh,24px);display:flex;flex-direction:column;align-items:center;border-radius:42px}
 .profile-card .avatar{width:clamp(110px,20vh,170px);height:clamp(110px,20vh,170px);position:relative;animation:breathe 3s ease-in-out infinite}
 .profile-card .avatar svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 10px 10px rgba(95,55,170,.25))}
 .profile-card .acc{position:absolute;top:-8%;right:2%;font-size:clamp(1.8rem,5vh,2.6rem);rotate:18deg;filter:drop-shadow(0 4px 4px rgba(0,0,0,.15))}
@@ -241,8 +242,13 @@ body.in-game .made-by{display:none}
         <div class="name puffy" style="--c:#a585ff">Alice</div>
         <div class="age" id="age-alice"></div>
       </button>
+      <button class="clay profile-card" onclick="selectProfile('bo')">
+        <div class="avatar" id="av-bo"><span class="acc">🦖</span></div>
+        <div class="name puffy" style="--c:#4aa3ff">Bo</div>
+        <div class="age" id="age-bo"></div>
+      </button>
     </div>
-    <div class="theme-picker"><span class="tp-label">Tema:</span><button class="clay white tp" onclick="setTheme('classic')">✨ Klassisk</button><button class="clay white tp" onclick="setTheme('paper')">✂️ Papper</button><button class="clay white tp on" onclick="setTheme('clay')">🧸 Lera</button></div>
+    <div class="theme-picker"><span class="tp-label">Tema:</span><button class="clay white tp" onclick="setTheme('classic')">✨ Klassisk</button><button class="clay white tp" onclick="setTheme('paper')">✂️ Papper</button><button class="clay white tp on" onclick="setTheme('clay')">🧸 Squishy</button><button class="clay white tp" onclick="setTheme('turbo')">🚓 Turbo</button></div>
   </section>
 
   <!-- MENY -->
@@ -346,7 +352,8 @@ body.in-game .made-by{display:none}
 // ===================== DATA =====================
 var PROFILES={
   lily:{name:"Lily",color:"#ff9fcf",face:"#ff9fcf"},
-  alice:{name:"Alice",color:"#bba2ff",face:"#bba2ff"}
+  alice:{name:"Alice",color:"#bba2ff",face:"#bba2ff"},
+  bo:{name:"Bo",color:"#86ccff",face:"#86ccff"}
 };
 var CLAY=["#ff9fcf","#ffb58f","#ffdd6e","#86e6bb","#86ccff","#bba2ff","#ff9494"];
 
@@ -561,7 +568,7 @@ function setupMenu(){
     items.appendChild(b);
   });
 }
-function key2color(k){return k==='alice'?'#a585ff':'#ff7fbd'}
+function key2color(k){return {alice:'#a585ff',bo:'#4aa3ff'}[k]||'#ff7fbd'}
 
 // ===================== SPEL =====================
 function startGame(mode){
@@ -773,9 +780,11 @@ function toggleHideSentence(){
 // ===================== START =====================
 document.getElementById('age-lily').textContent=ageLabel('lily');
 document.getElementById('age-alice').textContent=ageLabel('alice');
+document.getElementById('age-bo').textContent=ageLabel('bo');
 buildBackground();buildTitle();
 document.getElementById('av-lily').insertAdjacentHTML('afterbegin',SHAPES.blob('#ff9fcf'));
 document.getElementById('av-alice').insertAdjacentHTML('afterbegin',SHAPES.blob('#bba2ff'));
+document.getElementById('av-bo').insertAdjacentHTML('afterbegin',SHAPES.blob('#86ccff'));
 initVoices();
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/AliceLily/sw.js').catch(function(){})})}
 </script>
