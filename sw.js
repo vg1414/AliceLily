@@ -1,8 +1,11 @@
-const CACHE_NAME = 'abc123-v1';
+const CACHE_NAME = 'abc123-v2';
 
 const STATIC_ASSETS = [
   '/AliceLily/',
   '/AliceLily/index.html',
+  '/AliceLily/paper.html',
+  '/AliceLily/clay.html',
+  '/AliceLily/content.js',
   '/AliceLily/manifest.json'
 ];
 
