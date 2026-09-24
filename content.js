@@ -94,18 +94,19 @@ var CONTENT={
       {text:"BOLLEN ÄR RUND",emoji:"⚽"},{text:"VI LEKER UTE",emoji:"🌳"},{text:"APAN ÄR GLAD",emoji:"🐒"}
     ]
   },
-  // Nivå 6 – förskoleklass: längre ord med svårare ljud, längre meningar, tal upp till 20
+  // Nivå 6 – förskoleklass: längre ord, längre meningar, tal upp till 20.
+  // Inga sje- eller tje-ljud (SJ, STJ, CH, TJ, KJ, SK/K före E I Y Ä Ö …) – de är för svåra att stava än.
   6:{
     letters:"ABCDEFGHIJKLMNOPQRSTUVWXYZÅÄÖ".split(""),
     words:[
       {word:"BJÖRN",hint:"🐻"},{word:"HÄST",hint:"🐴"},{word:"FÅGEL",hint:"🐦"},{word:"ÄPPLE",hint:"🍎"},
-      {word:"PÄRON",hint:"🍐"},{word:"TÅRTA",hint:"🎂"},{word:"BLOMMA",hint:"🌺"},{word:"STJÄRNA",hint:"⭐"},
+      {word:"PÄRON",hint:"🍐"},{word:"TÅRTA",hint:"🎂"},{word:"BLOMMA",hint:"🌺"},{word:"KROKODIL",hint:"🐊"},
       {word:"HJÄRTA",hint:"❤️"},{word:"GRODA",hint:"🐸"},{word:"KANIN",hint:"🐰"},{word:"SKOLA",hint:"🏫"},
-      {word:"DELFIN",hint:"🐬"},{word:"PRINSESSA",hint:"👸"},{word:"CHOKLAD",hint:"🍫"},{word:"FLYGPLAN",hint:"✈️"},
+      {word:"DELFIN",hint:"🐬"},{word:"PRINSESSA",hint:"👸"},{word:"HELIKOPTER",hint:"🚁"},{word:"FLYGPLAN",hint:"✈️"},
       {word:"FJÄRIL",hint:"🦋"},{word:"ENHÖRNING",hint:"🦄"},{word:"REGNBÅGE",hint:"🌈"},{word:"SNÖGUBBE",hint:"⛄"},
       {word:"JORDGUBBE",hint:"🍓"},{word:"GIRAFF",hint:"🦒"},{word:"ELEFANT",hint:"🐘"},{word:"PINGVIN",hint:"🐧"},
       {word:"RAKET",hint:"🚀"},{word:"CYKEL",hint:"🚲"},{word:"PANNKAKA",hint:"🥞"},{word:"SPINDEL",hint:"🕷️"},
-      {word:"SKÖLDPADDA",hint:"🐢"},{word:"BLÄCKFISK",hint:"🐙"},{word:"VULKAN",hint:"🌋"},{word:"KRONA",hint:"👑"}
+      {word:"PAPEGOJA",hint:"🦜"},{word:"BLÄCKFISK",hint:"🐙"},{word:"VULKAN",hint:"🌋"},{word:"KRONA",hint:"👑"}
     ],
     sentences:[
       {text:"KATTEN SOVER PÅ SOFFAN",emoji:"🐱"},
