@@ -33,4 +33,4 @@ Alla ord, meningar, mattetal och födelsedagar finns i `content.js` och delas av
 - Vanilla HTML/CSS/JavaScript – inga ramverk
 - Web Speech API (text-till-tal), Web Audio API (ljudeffekter)
 - Google Fonts (Fredoka, Nunito)
-- PWA med manifest och service worker, låst till liggande läge
+- PWA med manifest och service worker, låst till liggande läge. På plattor går appen till helskärm och låser skärmen liggande vid första trycket, och hålls plattan stående visas en "Vänd plattan!"-skylt (koden finns i `content.js`)

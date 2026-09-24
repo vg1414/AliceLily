@@ -1,4 +1,4 @@
-const CACHE_NAME = 'abc123-v3';
+const CACHE_NAME = 'abc123-v4';
 
 const STATIC_ASSETS = [
   '/AliceLily/',

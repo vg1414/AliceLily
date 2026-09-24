@@ -11,6 +11,50 @@ function setTheme(t){
   if(THEMES[t]&&location.pathname.indexOf(THEMES[t])<0)location.href=THEMES[t];
 }
 
+// ---------- Alltid liggande läge ----------
+// 1) manifest.json säger "orientation: landscape" – det gäller när appen öppnas via ikonen.
+// 2) Vid första trycket försöker vi dessutom låsa skärmen i liggande läge. Android tillåter bara
+//    låsning i helskärm, så misslyckas det går vi över till helskärm och låser sedan.
+// 3) Hålls plattan ändå stående visas en "Vänd plattan!"-skylt över hela appen.
+(function(){
+  function lockLandscape(){
+    var so=screen.orientation;
+    if(!so||!so.lock)return;
+    so.lock('landscape').catch(function(){
+      var el=document.documentElement,fs=el.requestFullscreen||el.webkitRequestFullscreen;
+      if(fs&&!document.fullscreenElement){
+        try{Promise.resolve(fs.call(el,{navigationUI:'hide'})).then(function(){return so.lock('landscape')}).catch(function(){})}catch(e){}
+      }
+    });
+  }
+  // försök vid varje tryck tills skärmen är liggande (t.ex. efter temabyte, då helskärmen släpps)
+  document.addEventListener('pointerdown',function(){
+    if(!matchMedia('(hover:none)').matches)return; // bara surfplattor/mobiler, aldrig datorer
+    if(!screen.orientation||screen.orientation.type.indexOf('landscape')<0||!document.fullscreenElement)lockLandscape();
+  },true);
+
+  // "Vänd plattan!"-skylten. Visas bara på pekskärmar (hover:none) som hålls stående,
+  // så att en vanlig datorskärm aldrig får den.
+  var css='#rotate-overlay{display:none;position:fixed;inset:0;z-index:99999;background:linear-gradient(160deg,#2d1b69,#1a1035);color:#fff;'+
+    'flex-direction:column;align-items:center;justify-content:center;gap:28px;text-align:center;font-family:Fredoka,"Lilita One",Nunito,sans-serif}'+
+    '@media (orientation:portrait) and (hover:none){#rotate-overlay{display:flex}}'+
+    '#rotate-overlay svg{width:42vw;max-width:260px;height:auto;animation:rotTablet 2.4s ease-in-out infinite}'+
+    '#rotate-overlay b{font-size:clamp(2rem,8vw,3.4rem);font-weight:700}'+
+    '#rotate-overlay span{font-size:clamp(1rem,4vw,1.5rem);opacity:.75;font-weight:600}'+
+    '@keyframes rotTablet{0%,20%{transform:rotate(0)}55%,85%{transform:rotate(-90deg)}100%{transform:rotate(0)}}';
+  var st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
+  function addOverlay(){
+    if(document.getElementById('rotate-overlay'))return;
+    var d=document.createElement('div');d.id='rotate-overlay';
+    d.innerHTML='<svg viewBox="0 0 120 170"><rect x="10" y="6" width="100" height="158" rx="16" fill="#ffd23f" stroke="#fff" stroke-width="6"/>'+
+      '<rect x="22" y="20" width="76" height="118" rx="6" fill="#3b82ff"/><circle cx="60" cy="151" r="6" fill="#fff"/>'+
+      '<circle cx="46" cy="70" r="6" fill="#fff"/><circle cx="74" cy="70" r="6" fill="#fff"/><path d="M44,94 q16,14 32,0" stroke="#fff" stroke-width="6" fill="none" stroke-linecap="round"/></svg>'+
+      '<b>Vänd plattan! 🔄</b><span>Håll den liggande så funkar appen</span>';
+    document.body.appendChild(d);
+  }
+  if(document.body)addOverlay();else document.addEventListener('DOMContentLoaded',addOverlay);
+})();
+
 // ---------- Födelsedagar & ålder ----------
 // OBS: Bos födelsedag är ungefärlig (samma år som Lily) – byt till rätt datum när du vet det,
 // annars hamnar födelsedagsfirandet på fel dag.
