@@ -1,5 +1,8 @@
 # Ändringslogg
 
+## 2026-10-08
+- Ny `.gitignore` som hindrar hemliga nyckelfiler (`.env`, `*.env`) från att laddas upp till GitHub
+
 ## 2026-09-24
 - Nivå 6 (Alice): bytt ut orden med sje-/tje-ljud (STJÄRNA, CHOKLAD, SKÖLDPADDA) mot KROKODIL, HELIKOPTER och PAPEGOJA. Meningarna hade inga sådana ljud och är oförändrade
 - Alltid liggande läge: på surfplattor går appen till helskärm och låser skärmen i liggande läge vid första trycket. Hålls plattan ändå stående visas en "Vänd plattan!"-skylt. Gäller alla teman (koden ligger i `content.js`). Service worker cache v4
