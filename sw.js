@@ -1,4 +1,9 @@
-const CACHE_NAME = 'abc123-v4';
+const CACHE_NAME = 'abc123-v5';
+
+// Listan över inspelade röstljud (VOICE_FILES) – saknas den finns det inga ljud att spara än
+try { importScripts('audio/voices.js'); } catch (e) {}
+const VOICE_ASSETS = typeof VOICE_FILES !== 'undefined'
+  ? Object.keys(VOICE_FILES).map(k => '/AliceLily/audio/' + k + '.mp3') : [];
 
 const STATIC_ASSETS = [
   '/AliceLily/',
@@ -7,13 +12,18 @@ const STATIC_ASSETS = [
   '/AliceLily/clay.html',
   '/AliceLily/turbo.html',
   '/AliceLily/content.js',
+  '/AliceLily/audio/voices.js',
   '/AliceLily/manifest.json'
 ];
 
 // Install: cache core files
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(STATIC_ASSETS))
+    caches.open(CACHE_NAME).then(cache =>
+      // röstljuden sparas ett och ett, så att en enda saknad fil inte stoppar resten
+      cache.addAll(STATIC_ASSETS).then(() =>
+        Promise.all(VOICE_ASSETS.map(url => cache.add(url).catch(() => {}))))
+    )
   );
   self.skipWaiting();
 });

@@ -10,8 +10,8 @@
 <meta name="theme-color" content="#1a1035">
 <title>ABC & 123</title>
 <script>
-// Öppna det tema man valde senast (Papper / Lera) – körs direkt så att den klassiska sidan inte blinkar förbi
-try{var _t=localStorage.getItem('abcTheme');if(_t==='paper')location.replace('paper.html');else if(_t==='clay')location.replace('clay.html')}catch(e){}
+// Öppna det tema man valde senast (Papper / Squishy / Turbo) – körs direkt så att den klassiska sidan inte blinkar förbi
+try{var _t=localStorage.getItem('abcTheme');if(_t==='paper')location.replace('paper.html');else if(_t==='clay')location.replace('clay.html');else if(_t==='turbo')location.replace('turbo.html')}catch(e){}
 </script>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
@@ -34,6 +34,7 @@ try{var _t=localStorage.getItem('abcTheme');if(_t==='paper')location.replace('pa
 }
 body[data-profile="lily"]{--accent:#ff6fae;--accent2:#ffb36b}
 body[data-profile="alice"]{--accent:#9b7bff;--accent2:#5ec8ff}
+body[data-profile="bo"]{--accent:#3b9dff;--accent2:#4fe0b5}
 
 html,body{width:100%;height:100%;overflow:hidden;font-family:'Nunito',sans-serif;color:#fff;background:#140c2e;
   user-select:none;-webkit-user-select:none;touch-action:manipulation;overscroll-behavior:none}
@@ -42,6 +43,7 @@ button{font-family:inherit;border:none;outline:none;cursor:pointer;touch-action:
 /* ============ BAKGRUND: natthimmel med norrsken ============ */
 #sky{position:fixed;inset:0;z-index:0;overflow:hidden;background:radial-gradient(120% 90% at 50% 110%,#3b1f7a 0%,#1f1150 45%,#120a2b 100%);transition:background 1s}
 body[data-profile="lily"] #sky{background:radial-gradient(120% 90% at 50% 110%,#6a1f63 0%,#34124f 45%,#150a2b 100%)}
+body[data-profile="bo"] #sky{background:radial-gradient(120% 90% at 50% 110%,#1f4d7a 0%,#152a55 45%,#0a1230 100%)}
 .aurora{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;animation:auroraMove 18s ease-in-out infinite alternate;transition:background 1s}
 .aurora.a1{width:60vw;height:40vh;left:-10vw;top:-8vh;background:var(--accent)}
 .aurora.a2{width:55vw;height:38vh;right:-12vw;top:10vh;background:var(--accent2);animation-duration:22s;animation-delay:-6s}
@@ -83,14 +85,15 @@ body[data-profile="lily"] #sky{background:radial-gradient(120% 90% at 50% 110%,#
 .title h1{font-family:'Fredoka';font-weight:700;font-size:clamp(3rem,13vh,7rem);line-height:1;letter-spacing:.01em;filter:drop-shadow(0 6px 30px rgba(155,123,255,.55))}
 .title h1 .spark{display:inline-block;animation:bounce 2.4s ease-in-out infinite}
 .title p{margin-top:.5em;font-weight:800;font-size:clamp(1.05rem,3vh,1.5rem);color:rgba(255,255,255,.8)}
-.profile-row{display:flex;gap:clamp(24px,6vw,80px)}
-.profile-btn{position:relative;width:clamp(200px,27vw,290px);padding:clamp(20px,4vh,36px) 20px clamp(18px,3vh,28px);border-radius:40px;display:flex;flex-direction:column;align-items:center;
+.profile-row{display:flex;gap:clamp(18px,4vw,56px)}
+.profile-btn{position:relative;width:clamp(180px,23vw,270px);padding:clamp(20px,4vh,36px) 20px clamp(18px,3vh,28px);border-radius:40px;display:flex;flex-direction:column;align-items:center;
   transition:transform .3s var(--spring)}
 .profile-btn:active{transform:scale(.92)}
 .profile-btn .orb{width:clamp(100px,20vh,160px);height:clamp(100px,20vh,160px);border-radius:50%;display:grid;place-items:center;
   background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.55),transparent 45%),linear-gradient(135deg,var(--c1),var(--c2));
   box-shadow:0 12px 40px -6px var(--c1),inset 0 -8px 20px rgba(0,0,0,.2);font-size:clamp(3rem,10vh,5.2rem);animation:bounce 2.8s ease-in-out infinite}
 .profile-btn:nth-child(2) .orb{animation-delay:-1.2s}
+.profile-btn:nth-child(3) .orb{animation-delay:-2s}
 .profile-btn .name{font-family:'Fredoka';font-weight:700;font-size:clamp(1.9rem,6vh,2.9rem);margin-top:.35em;line-height:1.1}
 .profile-btn .age{font-weight:800;color:rgba(255,255,255,.65);font-size:clamp(.95rem,2.4vh,1.15rem)}
 .theme-picker{display:flex;align-items:center;gap:8px;padding:6px 8px 6px 16px;border-radius:99px}
@@ -246,8 +249,13 @@ body.in-game .made-by{display:none}
         <div class="name">Alice</div>
         <div class="age" id="age-alice"></div>
       </button>
+      <button class="glass profile-btn" style="--c1:#3b9dff;--c2:#4fe0b5" onclick="selectProfile('bo')">
+        <div class="orb">🦖</div>
+        <div class="name">Bo</div>
+        <div class="age" id="age-bo"></div>
+      </button>
     </div>
-    <div class="glass theme-picker"><span class="tp-label">Tema:</span><button class="tp on" onclick="setTheme('classic')">✨ Klassisk</button><button class="tp" onclick="setTheme('paper')">✂️ Papper</button><button class="tp" onclick="setTheme('clay')">🧸 Lera</button></div>
+    <div class="glass theme-picker"><span class="tp-label">Tema:</span><button class="tp on" onclick="setTheme('classic')">✨ Klassisk</button><button class="tp" onclick="setTheme('paper')">✂️ Papper</button><button class="tp" onclick="setTheme('clay')">🧸 Squishy</button><button class="tp" onclick="setTheme('turbo')">🚓 Turbo</button></div>
   </section>
 
   <!-- MENY -->
@@ -353,7 +361,9 @@ var PROFILES={
   lily:{name:"Lily",emoji:"🌸",color:"#ff6fae",
     floaties:["🌸","🌺","🦋","⭐","💖","🌈","🎀","🌟","💗","🌷"]},
   alice:{name:"Alice",emoji:"✨",color:"#9b7bff",
-    floaties:["⭐","🌟","💫","✨","🔮","🦄","🌙","💎","🎇","🌠"]}
+    floaties:["⭐","🌟","💫","✨","🔮","🦄","🌙","💎","🎇","🌠"]},
+  bo:{name:"Bo",emoji:"🦖",color:"#3b9dff",
+    floaties:["🦖","🦕","🚓","🚗","🤖","🚀","⭐","🏎️","🚒","🌋"]}
 };
 var CONFETTI_COLORS=["#FF6B9D","#7C5CFC","#FFD93D","#6BCB77","#FF8B3D","#4FC3F7","#FF6B6B","#a78bfa","#34D399","#F59E0B"];
 
@@ -700,6 +710,7 @@ function toggleHideSentence(){
 buildStars();spawnFloaties(null);initVoices();
 document.getElementById('age-lily').textContent=ageLabel('lily');
 document.getElementById('age-alice').textContent=ageLabel('alice');
+document.getElementById('age-bo').textContent=ageLabel('bo');
 if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('/AliceLily/sw.js').catch(function(){})})}
 </script>
 </body>

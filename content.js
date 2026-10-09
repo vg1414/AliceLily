@@ -16,7 +16,8 @@ function setTheme(t){
 // 2) Vid första trycket försöker vi dessutom låsa skärmen i liggande läge. Android tillåter bara
 //    låsning i helskärm, så misslyckas det går vi över till helskärm och låser sedan.
 // 3) Hålls plattan ändå stående visas en "Vänd plattan!"-skylt över hela appen.
-(function(){
+// (körs bara i webbläsaren – inte när tools/voice.js läser filen)
+if(typeof document!=='undefined')(function(){
   function lockLandscape(){
     var so=screen.orientation;
     if(!so||!so.lock)return;
@@ -164,4 +165,107 @@ function makeMathTask(level,emoji){
   while(opts.length<4){var w=Math.max(0,t.answer+r(-spread,spread));if(opts.indexOf(w)<0)opts.push(w)}
   t.options=opts;
   return t;
+}
+
+// ---------- Rösten (inspelade ljud med Karin från ElevenLabs) ----------
+// Allt appen säger finns som små mp3-filer i mappen audio/. Listan över vilka filer som finns
+// ligger i audio/voices.js (skapas av tools/voice.js). Saknas ett ljud används webbläsarens röst.
+// Mattetal spelas som byggbitar: "7" → "plus" → "5" → "är lika med" → "12".
+var VOICE_LETTERS={A:'a',B:'be',C:'se',D:'D',E:'e',F:'eff',G:'Gheeh',H:'hå',I:'i',J:'Jii',K:'kå',L:'ell',M:'emm',N:'enn',
+  O:'ooo',P:'pee.',Q:'ku',R:'ärr',S:'ess',T:'te',U:'u',V:'vee',W:'dubbel-vee',X:'ekss',Y:'y',Z:'säta','Å':'å [förvånad]','Ä':'ä','Ö':'ö'};
+var VOICE_NUMBERS=['noll','ett','två','tre','fyra','fem','sex','sju','åtta','nio','tio','elva','tolv','tretton','fjorton',
+  'femton','sexton','sjutton','arton','nitton','tjugo'];
+var VOICE_NAMES=['Alice','Lily','Bo'];
+// Specialstavningar: ord som ElevenLabs uttalar fel (t.ex. på engelska) får en annan stavning
+// i checklistan. Barnen ser fortfarande det vanliga ordet – det här gäller bara inspelningen.
+var VOICE_SPELL={KO:'Kuu'};
+// Bokstavsljud (i stället för bokstavsnamn) – dubbelljuden får samma ljud som sin "tvilling"
+var VOICE_SOUNDS={A:'a',B:'b',C:'sss',D:'d',E:'eee',F:'fff',G:'g',H:'hhh',I:'iiii',J:'jjj',K:'k',L:'llllllll',M:'mmm',N:'nnn',
+  O:'ooo',P:'pppp',Q:'k',R:'rrr',S:'sss',T:'tttt',U:'u',V:'vvvv',W:'vvvv',X:'kss',Y:'yyyy',Z:'sss','Å':'å','Ä':'äää','Ö':'ö'};
+
+// Gör om en text till ett filnamn: "Hej Alice" → "hej-alice", "Ö" → "oe"
+function voiceKey(text){
+  return String(text).toLowerCase().trim().replace(/[!?.,]/g,'').replace(/å/g,'aa').replace(/ä/g,'ae').replace(/ö/g,'oe')
+    .replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+}
+// Alla fraser som ska spelas in. key = filnamnet, say = texten att klistra in hos ElevenLabs.
+function voicePhrases(){
+  var list=[],seen={};
+  function cap(s){s=s.toLowerCase();return s.charAt(0).toUpperCase()+s.slice(1)}
+  function add(group,appText,say){var k=voiceKey(appText);if(seen[k])return;seen[k]=1;list.push({group:group,key:k,say:say})}
+  VOICE_NAMES.forEach(function(n){add('Hälsningar','hej '+n,'Hej '+n+'!')});
+  VOICE_NAMES.forEach(function(n){add('Hälsningar','grattis på födelsedagen '+n,'Grattis på födelsedagen '+n+'!')});
+  add('Hälsningar','hej hej','Hej hej!');add('Hälsningar','god natt','God natt!');
+  CONTENT[5].letters.forEach(function(l){add('Bokstäver',l,VOICE_LETTERS[l])});
+  CONTENT[5].letters.forEach(function(l){add('Bokstavsljud','ljud '+VOICE_SOUNDS[l],VOICE_SOUNDS[l])});
+  [5,6].forEach(function(lv){CONTENT[lv].words.forEach(function(w){add('Ord nivå '+lv,w.word,VOICE_SPELL[w.word]||cap(w.word))})});
+  [5,6].forEach(function(lv){CONTENT[lv].sentences.forEach(function(s){add('Meningar nivå '+lv,s.text,cap(s.text)+'.')})});
+  VOICE_NUMBERS.forEach(function(w,i){add('Tal',String(i),w)});
+  ['plus','minus','gånger','är lika med','plus hur många blir'].forEach(function(w){add('Matteord',w,w)});
+  return list;
+}
+
+// Vilka ljudbitar behövs för en text? Hel fras om den finns, annars delas den vid talen
+// (mattetal). Returnerar null om någon bit saknas – då pratar webbläsaren i stället.
+function voiceClips(text){
+  var have=typeof VOICE_FILES!=='undefined'?VOICE_FILES:{},k=voiceKey(text);
+  if(have[k])return [k];
+  var parts=String(text).split(/(\d+)/).map(function(p){return voiceKey(p)}).filter(Boolean);
+  if(parts.length<2)return null;
+  for(var i=0;i<parts.length;i++)if(!have[parts[i]])return null;
+  return parts;
+}
+
+// Uppspelningskö: varje anrop blir ett "jobb" med en eller flera ljudbitar som spelas i följd.
+var voiceQ=[],voiceEl=null,voiceBusy=false;
+function voiceNext(){
+  var job=voiceQ[0];
+  if(!job){voiceBusy=false;voiceEl=null;return}
+  voiceBusy=true;
+  if(!job.clips.length){voiceQ.shift();if(job.onDone)setTimeout(job.onDone,400);voiceNext();return}
+  var a=new Audio('audio/'+job.clips.shift()+'.mp3');voiceEl=a;
+  a.onended=voiceNext;
+  a.onerror=function(){job.clips=[];voiceNext()}; // trasig fil → hoppa över, men spelet fortsätter
+  var p=a.play();if(p&&p.catch)p.catch(function(){if(voiceEl===a)a.onerror()});
+}
+// Stoppa allt som låter. Avbrutna jobb får ändå sin onDone så att spelet inte fastnar.
+function voiceStop(){
+  var old=voiceQ;voiceQ=[];voiceBusy=false;
+  if(voiceEl){voiceEl.onended=voiceEl.onerror=null;voiceEl.pause();voiceEl=null}
+  old.forEach(function(j){if(j.onDone)setTimeout(j.onDone,0)});
+  if(typeof speechSynthesis!=='undefined')speechSynthesis.cancel();
+}
+
+// speakText används av alla teman. pitch skickas bara av Robbo i Turbo – han behåller robotrösten.
+// Kommer två anrop inom en halv sekund läggs det andra i kö, annars avbryts det som låter.
+var lastSpeakTime=0;
+function speakText(text,rate,onDone,pitch){
+  if(!text){if(onDone)onDone();return}
+  var now=Date.now();if(now-lastSpeakTime>500)voiceStop();lastSpeakTime=now;
+  var clips=pitch?null:voiceClips(text);
+  if(clips){voiceQ.push({clips:clips,onDone:onDone});if(!voiceBusy)voiceNext();return}
+  if(!('speechSynthesis' in window)){if(onDone)onDone();return}
+  try{
+    var u=new SpeechSynthesisUtterance(String(text).replace(/^ljud /,'').toLowerCase());
+    u.lang='sv-SE';u.rate=rate||0.7;u.pitch=pitch||1.1;u.volume=1;
+    if(onDone)u.onend=function(){setTimeout(onDone,400)};
+    speechSynthesis.speak(u);
+  }catch(e){if(onDone)onDone()}
+}
+
+// ---------- Bokstavsnamn eller bokstavsljud ----------
+// Valet görs med knappen under bokstaven i bokstavsspelet och sparas per barn i webbläsaren.
+// Gäller både bokstavsspelet och när man trycker på bokstäver i ord- och meningsspelet (nivå 5).
+function letterSoundKey(){return 'abcLetterSound_'+currentProfile}
+function letterSoundsOn(){try{return localStorage.getItem(letterSoundKey())==='1'}catch(e){return false}}
+// Det appen ska säga för en bokstav: "B" (namnet, Karin säger "be") eller "ljud b" (ljudet)
+function letterSay(l){return letterSoundsOn()&&VOICE_SOUNDS[l]?'ljud '+VOICE_SOUNDS[l]:l}
+function renderLetterToggle(){
+  var b=document.getElementById('letter-toggle');
+  if(b)b.textContent=letterSoundsOn()?'🗣️ Ljud':'🔤 Namn';
+}
+function toggleLetterSound(){
+  try{localStorage.setItem(letterSoundKey(),letterSoundsOn()?'0':'1')}catch(e){}
+  renderLetterToggle();
+  if(targetLetter)speakText(letterSay(targetLetter),0.6); // lyssna direkt hur det låter nu
 }

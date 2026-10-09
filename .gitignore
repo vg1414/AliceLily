@@ -1,3 +1,4 @@
 # Hemliga nycklar – får aldrig laddas upp till GitHub
 .env
 *.env
+tools/fraser.html

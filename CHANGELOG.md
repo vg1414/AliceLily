@@ -1,5 +1,13 @@
 # Ändringslogg
 
+## 2026-10-09
+- Ny röst: inspelade ljud med Karin (ElevenLabs) i alla fyra teman. Klart än så länge: hälsningar, alla bokstavsnamn och bokstavsljud samt matteorden. Det som inte är inspelat (tal, ord, meningar) pratar webbläsarens röst som förut. Robbo i Turbo behåller robotrösten
+- Gemensam talfunktion `speakText` i `content.js` i stället för en kopia per tema. Mattetal spelas upp som byggbitar
+- Ny knapp **🔤 Namn / 🗣️ Ljud** i bokstavsspelet: välj om bokstäver läses som namn eller ljud. Sparas per barn
+- Service worker v5 sparar alla röstljud för offline-användning
+- Nytt verktyg `tools/voice.js` som hämtar ljuden från ElevenLabs-historiken och gör checklistan `tools/fraser.html`
+- "Röst: ElevenLabs" längst ner bredvid signaturen (krävs på ElevenLabs gratisnivå)
+
 ## 2026-10-08
 - Ny `.gitignore` som hindrar hemliga nyckelfiler (`.env`, `*.env`) från att laddas upp till GitHub
 

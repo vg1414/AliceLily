@@ -271,7 +271,7 @@ body.in-game .made-by{display:none}
       <div class="clay white panel" id="card-letters">
         <p class="hint">Hitta bokstaven:</p>
         <div class="big-letter puffy" id="target-letter"></div>
-        <div><button class="clay sound-btn" onclick="speakText(targetLetter,0.6)">🔊</button></div>
+        <div><button class="clay sound-btn" onclick="speakText(letterSay(targetLetter),0.6)">🔊</button><br><button class="toggle-chip" id="letter-toggle" onclick="toggleLetterSound()">🔤 Namn</button></div>
         <div id="letter-feedback" style="display:none" class="correct-msg"></div>
       </div>
       <div class="answer-grid" id="letter-options"></div>
@@ -343,10 +343,11 @@ body.in-game .made-by{display:none}
   </section>
 </div>
 
-<div class="made-by">Made by: David Hefner</div>
+<div class="made-by">Made by: David Hefner · Röst: ElevenLabs</div>
 <div id="fx"></div>
 
 <!-- Ord, meningar, födelsedagar, mattetal och temaväljare (delas av alla teman) -->
+<script src="audio/voices.js"></script>
 <script src="content.js"></script>
 <script>
 // ===================== DATA =====================
@@ -394,15 +395,8 @@ function playStar(){playNotes([[523,.18],[659,.18],[784,.18],[1047,.18],[1319,.1
 
 // ===================== TAL =====================
 function initVoices(){if('speechSynthesis' in window){speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=function(){speechSynthesis.getVoices()}}}
-var lastSpeakTime=0;
-function speakText(text,rate,onDone){
-  if(!text||!('speechSynthesis' in window)){if(onDone)onDone();return}
-  try{var now=Date.now();if(now-lastSpeakTime>500)speechSynthesis.cancel();lastSpeakTime=now;
-    var u=new SpeechSynthesisUtterance(text.toLowerCase());u.lang='sv-SE';u.rate=rate||0.7;u.pitch=1.1;u.volume=1;
-    if(onDone)u.onend=function(){setTimeout(onDone,400)};speechSynthesis.speak(u);
-  }catch(e){if(onDone)onDone()}
-}
-function speakLetter(letter){if(currentProfile&&level()===5)speakText(letter,0.6)}
+// speakText (rösten) finns i content.js och delas av alla teman
+function speakLetter(letter){if(currentProfile&&level()===5)speakText(letterSay(letter),0.6)}
 function speakCurrentWord(){if(wordIdx<shuffledWords.length)speakText(shuffledWords[wordIdx].word,0.6)}
 function speakCurrentSentence(){if(readIdx<shuffledSentences.length)speakText(shuffledSentences[readIdx].text,0.7)}
 function speakCurrentMath(){if(mathTask)speakText(mathTask.say,0.7)}
@@ -600,14 +594,14 @@ function markWrong(btn){btn.style.animation='';restartAnim(btn,'wrong');setTimeo
 // bokstäver
 function initLetterRound(){
   var p=PROFILES[currentProfile],c=CONTENT[level()];
-  letterLocked=false;letterFirstTry=true;targetLetter=pick(c.letters);
+  letterLocked=false;letterFirstTry=true;targetLetter=pick(c.letters);renderLetterToggle();
   var arr=[targetLetter];while(arr.length<4){var r=pick(c.letters);if(arr.indexOf(r)<0)arr.push(r)}
   var tl=document.getElementById('target-letter');tl.textContent=targetLetter;tl.style.setProperty('--c',key2color(currentProfile));
   document.getElementById('letter-feedback').style.display='none';
   renderStars('letter-stars','letter-score-num',letterScore);
   var grid=document.getElementById('letter-options');grid.innerHTML='';
   shuffle(arr).forEach(function(l,i){grid.appendChild(makeAnswer(l,i,function(b,e){guessLetter(l,b,e)}))});
-  setTimeout(function(){speakText(targetLetter,0.6)},400);
+  setTimeout(function(){speakText(letterSay(targetLetter),0.6)},400);
 }
 function guessLetter(letter,btn,e){
   if(letterLocked)return;playClick();speakLetter(letter);
